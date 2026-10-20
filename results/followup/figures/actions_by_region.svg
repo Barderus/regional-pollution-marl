@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="930" height="555" viewBox="0 0 930 555">
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font:13px sans-serif;fill:#253341}.title{font:bold 19px sans-serif}.axis{stroke:#253341;stroke-width:1.5}</style>
+<text class="title" x="55" y="35">Action choices by policy and region</text>
+<text x="55" y="61">Fraction of held-out region-steps; learned policies average five training seeds</text>
+<text x="55" y="115">fixed_medium</text>
+<rect x="190.0" y="95" width="0.0" height="27" fill="#a6c8e0"/>
+<rect x="190.0" y="95" width="125.0" height="27" fill="#4691bd"/>
+<rect x="315.0" y="95" width="0.0" height="27" fill="#185780"/>
+<text x="232" y="142">region 0</text>
+<rect x="365.0" y="95" width="0.0" height="27" fill="#a6c8e0"/>
+<rect x="365.0" y="95" width="125.0" height="27" fill="#4691bd"/>
+<rect x="490.0" y="95" width="0.0" height="27" fill="#185780"/>
+<text x="407" y="142">region 1</text>
+<rect x="540.0" y="95" width="0.0" height="27" fill="#a6c8e0"/>
+<rect x="540.0" y="95" width="125.0" height="27" fill="#4691bd"/>
+<rect x="665.0" y="95" width="0.0" height="27" fill="#185780"/>
+<text x="582" y="142">region 2</text>
+<rect x="715.0" y="95" width="0.0" height="27" fill="#a6c8e0"/>
+<rect x="715.0" y="95" width="125.0" height="27" fill="#4691bd"/>
+<rect x="840.0" y="95" width="0.0" height="27" fill="#185780"/>
+<text x="757" y="142">region 3</text>
+<text x="55" y="187">random</text>
+<rect x="190.0" y="167" width="41.5" height="27" fill="#a6c8e0"/>
+<rect x="231.5" y="167" width="40.8" height="27" fill="#4691bd"/>
+<rect x="272.2" y="167" width="42.8" height="27" fill="#185780"/>
+<text x="232" y="214">region 0</text>
+<rect x="365.0" y="167" width="41.6" height="27" fill="#a6c8e0"/>
+<rect x="406.6" y="167" width="42.2" height="27" fill="#4691bd"/>
+<rect x="448.9" y="167" width="41.1" height="27" fill="#185780"/>
+<text x="407" y="214">region 1</text>
+<rect x="540.0" y="167" width="42.0" height="27" fill="#a6c8e0"/>
+<rect x="582.0" y="167" width="41.7" height="27" fill="#4691bd"/>
+<rect x="623.7" y="167" width="41.3" height="27" fill="#185780"/>
+<text x="582" y="214">region 2</text>
+<rect x="715.0" y="167" width="42.6" height="27" fill="#a6c8e0"/>
+<rect x="757.6" y="167" width="42.2" height="27" fill="#4691bd"/>
+<rect x="799.8" y="167" width="40.2" height="27" fill="#185780"/>
+<text x="757" y="214">region 3</text>
+<text x="55" y="259">threshold</text>
+<rect x="190.0" y="239" width="57.9" height="27" fill="#a6c8e0"/>
+<rect x="247.9" y="239" width="67.0" height="27" fill="#4691bd"/>
+<rect x="314.9" y="239" width="0.1" height="27" fill="#185780"/>
+<text x="232" y="286">region 0</text>
+<rect x="365.0" y="239" width="55.8" height="27" fill="#a6c8e0"/>
+<rect x="420.8" y="239" width="68.6" height="27" fill="#4691bd"/>
+<rect x="489.4" y="239" width="0.6" height="27" fill="#185780"/>
+<text x="407" y="286">region 1</text>
+<rect x="540.0" y="239" width="58.0" height="27" fill="#a6c8e0"/>
+<rect x="598.0" y="239" width="66.1" height="27" fill="#4691bd"/>
+<rect x="664.1" y="239" width="0.9" height="27" fill="#185780"/>
+<text x="582" y="286">region 2</text>
+<rect x="715.0" y="239" width="49.2" height="27" fill="#a6c8e0"/>
+<rect x="764.2" y="239" width="74.8" height="27" fill="#4691bd"/>
+<rect x="839.0" y="239" width="1.0" height="27" fill="#185780"/>
+<text x="757" y="286">region 3</text>
+<text x="55" y="331">iql_local</text>
+<rect x="190.0" y="311" width="62.1" height="27" fill="#a6c8e0"/>
+<rect x="252.1" y="311" width="45.5" height="27" fill="#4691bd"/>
+<rect x="297.6" y="311" width="17.4" height="27" fill="#185780"/>
+<text x="232" y="358">region 0</text>
+<rect x="365.0" y="311" width="78.6" height="27" fill="#a6c8e0"/>
+<rect x="443.6" y="311" width="37.6" height="27" fill="#4691bd"/>
+<rect x="481.3" y="311" width="8.7" height="27" fill="#185780"/>
+<text x="407" y="358">region 1</text>
+<rect x="540.0" y="311" width="88.7" height="27" fill="#a6c8e0"/>
+<rect x="628.6" y="311" width="17.4" height="27" fill="#4691bd"/>
+<rect x="646.0" y="311" width="19.0" height="27" fill="#185780"/>
+<text x="582" y="358">region 2</text>
+<rect x="715.0" y="311" width="69.2" height="27" fill="#a6c8e0"/>
+<rect x="784.2" y="311" width="40.6" height="27" fill="#4691bd"/>
+<rect x="824.8" y="311" width="15.2" height="27" fill="#185780"/>
+<text x="757" y="358">region 3</text>
+<text x="55" y="403">iql_global</text>
+<rect x="190.0" y="383" width="52.9" height="27" fill="#a6c8e0"/>
+<rect x="242.9" y="383" width="54.2" height="27" fill="#4691bd"/>
+<rect x="297.1" y="383" width="17.9" height="27" fill="#185780"/>
+<text x="232" y="430">region 0</text>
+<rect x="365.0" y="383" width="43.0" height="27" fill="#a6c8e0"/>
+<rect x="408.0" y="383" width="50.2" height="27" fill="#4691bd"/>
+<rect x="458.1" y="383" width="31.9" height="27" fill="#185780"/>
+<text x="407" y="430">region 1</text>
+<rect x="540.0" y="383" width="54.0" height="27" fill="#a6c8e0"/>
+<rect x="594.0" y="383" width="52.1" height="27" fill="#4691bd"/>
+<rect x="646.1" y="383" width="18.9" height="27" fill="#185780"/>
+<text x="582" y="430">region 2</text>
+<rect x="715.0" y="383" width="57.9" height="27" fill="#a6c8e0"/>
+<rect x="772.9" y="383" width="52.0" height="27" fill="#4691bd"/>
+<rect x="825.0" y="383" width="15.0" height="27" fill="#185780"/>
+<text x="757" y="430">region 3</text>
+<text x="55" y="475">iql_mixed</text>
+<rect x="190.0" y="455" width="80.2" height="27" fill="#a6c8e0"/>
+<rect x="270.2" y="455" width="31.2" height="27" fill="#4691bd"/>
+<rect x="301.4" y="455" width="13.6" height="27" fill="#185780"/>
+<text x="232" y="502">region 0</text>
+<rect x="365.0" y="455" width="75.5" height="27" fill="#a6c8e0"/>
+<rect x="440.5" y="455" width="38.2" height="27" fill="#4691bd"/>
+<rect x="478.7" y="455" width="11.3" height="27" fill="#185780"/>
+<text x="407" y="502">region 1</text>
+<rect x="540.0" y="455" width="66.1" height="27" fill="#a6c8e0"/>
+<rect x="606.1" y="455" width="50.1" height="27" fill="#4691bd"/>
+<rect x="656.2" y="455" width="8.8" height="27" fill="#185780"/>
+<text x="582" y="502">region 2</text>
+<rect x="715.0" y="455" width="54.3" height="27" fill="#a6c8e0"/>
+<rect x="769.3" y="455" width="60.0" height="27" fill="#4691bd"/>
+<rect x="829.4" y="455" width="10.6" height="27" fill="#185780"/>
+<text x="757" y="502">region 3</text>
+<rect x="190" y="525" width="17" height="17" fill="#a6c8e0"/>
+<text x="214" y="538">action 0</text>
+<rect x="335" y="525" width="17" height="17" fill="#4691bd"/>
+<text x="359" y="538">action 1</text>
+<rect x="480" y="525" width="17" height="17" fill="#185780"/>
+<text x="504" y="538">action 2</text>
+</svg>

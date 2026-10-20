@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="930" height="570" viewBox="0 0 930 570">
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font:13px sans-serif;fill:#253341}.title{font:bold 19px sans-serif}.axis{stroke:#253341;stroke-width:1.5}</style>
+<text class="title" x="55" y="35">Pollution versus cost, spillover 0.2</text>
+<text x="55" y="62">Points are means; bars show one SD across training runs</text>
+<path class="axis" d="M80 90 V475 H700" fill="none"/>
+<text x="80.0" y="497" text-anchor="middle">433</text>
+<text x="70" y="479.0" text-anchor="end">22.8</text>
+<text x="235.0" y="497" text-anchor="middle">570</text>
+<text x="70" y="382.8" text-anchor="end">24.1</text>
+<text x="390.0" y="497" text-anchor="middle">707</text>
+<text x="70" y="286.5" text-anchor="end">25.3</text>
+<text x="545.0" y="497" text-anchor="middle">845</text>
+<text x="70" y="190.2" text-anchor="end">26.5</text>
+<text x="700.0" y="497" text-anchor="middle">982</text>
+<text x="70" y="94.0" text-anchor="end">27.7</text>
+<text x="280" y="535">Mitigation cost per episode</text>
+<text transform="translate(19 370) rotate(-90)">Mean regional pollution</text>
+<path d="M494.7 393.3 H494.7 M494.7 393.3 V393.3" stroke="#1769aa" stroke-width="2"/>
+<circle cx="494.7" cy="393.3" r="5" fill="#1769aa"/>
+<path d="M284.5 307.4 H608.6 M446.5 394.0 V220.7" stroke="#16845b" stroke-width="2"/>
+<circle cx="446.5" cy="307.4" r="5" fill="#16845b"/>
+<path d="M125.2 212.8 H248.0 M186.6 252.9 V172.6" stroke="#d35400" stroke-width="2"/>
+<circle cx="186.6" cy="212.8" r="5" fill="#d35400"/>
+<path d="M144.8 238.1 H333.1 M239.0 307.7 V168.5" stroke="#bc2f45" stroke-width="2"/>
+<circle cx="239.0" cy="238.1" r="5" fill="#bc2f45"/>
+<path d="M633.6 390.8 H654.8 M644.2 396.5 V385.1" stroke="#626b75" stroke-width="2"/>
+<circle cx="644.2" cy="390.8" r="5" fill="#626b75"/>
+<path d="M201.0 230.0 H201.0 M201.0 230.0 V230.0" stroke="#8751a3" stroke-width="2"/>
+<circle cx="201.0" cy="230.0" r="5" fill="#8751a3"/>
+<circle cx="750" cy="105" r="5" fill="#1769aa"/>
+<text x="764" y="109">fixed_medium</text>
+<circle cx="750" cy="135" r="5" fill="#626b75"/>
+<text x="764" y="139">random</text>
+<circle cx="750" cy="165" r="5" fill="#8751a3"/>
+<text x="764" y="169">threshold</text>
+<circle cx="750" cy="195" r="5" fill="#d35400"/>
+<text x="764" y="199">iql_local</text>
+<circle cx="750" cy="225" r="5" fill="#16845b"/>
+<text x="764" y="229">iql_global</text>
+<circle cx="750" cy="255" r="5" fill="#bc2f45"/>
+<text x="764" y="259">iql_mixed</text>
+</svg>

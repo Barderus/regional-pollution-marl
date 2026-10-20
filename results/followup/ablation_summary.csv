@@ -1,0 +1,10 @@
+metric,comparison,paired_runs,mean,sd
+mean_regional_pollution,spillover_02,20,-1.2054107918403596,1.0679502726646841
+mean_regional_pollution,spillover_00,20,-1.2336839270907087,0.8213472821761433
+mean_regional_pollution,spillover_02_minus_00,20,0.028273135250349135,1.609318879687586
+mitigation_cost,spillover_02,20,229.96,137.1071954808776
+mitigation_cost,spillover_00,20,228.7875,118.80343880699928
+mitigation_cost,spillover_02_minus_00,20,1.1724999999999965,197.72924435289897
+threshold_exceedance,spillover_02,20,-0.054925,0.06753571667137168
+threshold_exceedance,spillover_00,20,-0.024975,0.028674890446264364
+threshold_exceedance,spillover_02_minus_00,20,-0.029949999999999997,0.08376614534084256

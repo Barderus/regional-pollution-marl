@@ -1,0 +1,6 @@
+[project]
+name = "regional-pollution-marl"
+version = "0.1.0"
+description = "Synthetic four-region pollution coordination with independent tabular Q-learning"
+requires-python = ">=3.14"
+dependencies = []

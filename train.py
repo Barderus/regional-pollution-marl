@@ -1,7 +1,6 @@
 # Train four independent Q-learners per reward condition and save their tables
 
 import json
-import os
 import random
 
 from agents import TabularQLearner
@@ -11,13 +10,13 @@ from environment import PollutionEnvironment
 REWARD_MODES = ("local", "global", "mixed")
 
 
-def train_iql(reward_mode, training_seed, config=None):
+def train_iql(reward_mode, training_seed, config=None, environment_config=None):
     settings = config or TrainingConfig()
 
     if reward_mode not in REWARD_MODES:
         raise ValueError(reward_mode)
 
-    environment = PollutionEnvironment(reward_mode)
+    environment = PollutionEnvironment(reward_mode, environment_config)
     episode_rng = random.Random(training_seed)
     agents = tuple(TabularQLearner(training_seed * 10 + i, settings) for i in range(4))
 
@@ -53,7 +52,6 @@ def save_agents(filename, agents):
 def main():
     output_directory = "results/raw"
     config = TrainingConfig()
-    os.makedirs(output_directory, exist_ok=True)
 
     manifest = {
         "environment": vars(EnvironmentConfig()),

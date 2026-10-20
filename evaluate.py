@@ -16,9 +16,9 @@ METRICS = ("mean_regional_pollution", "mitigation_cost", "threshold_exceedance",
            "action_1_fraction", "action_2_fraction")
 
 
-def evaluate_policy(policy, environment_seeds):
+def evaluate_policy(policy, environment_seeds, environment_config=None):
     rows = []
-    environment = PollutionEnvironment()
+    environment = PollutionEnvironment(config=environment_config)
 
     for seed in environment_seeds:
         observation = environment.reset(seed)
@@ -82,6 +82,22 @@ def summarize_by_training_seed(episode_rows):
     return summaries
 
 
+def summarize_by_policy(run_rows):
+    groups = defaultdict(list)
+    for row in run_rows:
+        groups[row["policy"]].append(row)
+
+    summaries = []
+    for policy, rows in sorted(groups.items()):
+        summary = {"policy": policy, "runs": len(rows)}
+        for metric in METRICS:
+            values = [row[metric] for row in rows]
+            summary[f"{metric}_mean"] = statistics.mean(values)
+            summary[f"{metric}_sd"] = statistics.stdev(values) if len(values) > 1 else 0.0
+        summaries.append(summary)
+    return summaries
+
+
 def write_csv(filename, rows):
     with open(filename, "w", newline="", encoding="utf-8") as file:
         writer = csv.DictWriter(file, fieldnames=list(rows[0]))
@@ -132,20 +148,8 @@ def main():
     append_episode_rows("threshold", 0,
                         lambda observations: tuple(threshold_action(o) for o in observations))
     run_rows = summarize_by_training_seed(rows)
-    policy_groups = defaultdict(list)
-
     # Each run already averages its held-out episodes; spread is across policy seeds.
-    for row in run_rows:
-        policy_groups[row["policy"]].append(row)
-
-    summary_rows = []
-    for policy, group in sorted(policy_groups.items()):
-        summary = {"policy": policy, "runs": len(group)}
-        for metric in METRICS:
-            values = [row[metric] for row in group]
-            summary[f"{metric}_mean"] = statistics.mean(values)
-            summary[f"{metric}_sd"] = statistics.stdev(values) if len(values) > 1 else 0.0
-        summary_rows.append(summary)
+    summary_rows = summarize_by_policy(run_rows)
 
     write_csv(f"{results_directory}/episodes.csv", rows)
     write_csv(f"{results_directory}/run_summary.csv", run_rows)

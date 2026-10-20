@@ -1,0 +1,161 @@
+{
+  "environment": {
+    "neighbors": {
+      "0": [
+        1,
+        2
+      ],
+      "1": [
+        0,
+        3
+      ],
+      "2": [
+        0,
+        3
+      ],
+      "3": [
+        1,
+        2
+      ]
+    },
+    "base_emissions": [
+      2,
+      5,
+      8
+    ],
+    "mitigation_fractions": [
+      0.1,
+      0.3,
+      0.5
+    ],
+    "action_costs": [
+      1,
+      4,
+      9
+    ],
+    "persistence": 0.8,
+    "spillover": 0.0,
+    "episode_steps": 50
+  },
+  "training": {
+    "learning_rate": 0.1,
+    "discount_factor": 0.95,
+    "epsilon_start": 1.0,
+    "epsilon_decay": 0.995,
+    "epsilon_minimum": 0.05,
+    "training_episodes": 2000,
+    "training_seeds": [
+      11,
+      23,
+      37,
+      41,
+      53,
+      67,
+      71,
+      83,
+      97,
+      101,
+      107,
+      109,
+      127,
+      131,
+      137,
+      149,
+      157,
+      163,
+      173,
+      179
+    ],
+    "evaluation_seeds": [
+      100000,
+      100001,
+      100002,
+      100003,
+      100004,
+      100005,
+      100006,
+      100007,
+      100008,
+      100009,
+      100010,
+      100011,
+      100012,
+      100013,
+      100014,
+      100015,
+      100016,
+      100017,
+      100018,
+      100019
+    ]
+  },
+  "command": "python run_followup.py",
+  "reward_modes": [
+    "local",
+    "global",
+    "mixed"
+  ],
+  "models": [
+    "q_local_11.json",
+    "q_local_23.json",
+    "q_local_37.json",
+    "q_local_41.json",
+    "q_local_53.json",
+    "q_local_67.json",
+    "q_local_71.json",
+    "q_local_83.json",
+    "q_local_97.json",
+    "q_local_101.json",
+    "q_local_107.json",
+    "q_local_109.json",
+    "q_local_127.json",
+    "q_local_131.json",
+    "q_local_137.json",
+    "q_local_149.json",
+    "q_local_157.json",
+    "q_local_163.json",
+    "q_local_173.json",
+    "q_local_179.json",
+    "q_global_11.json",
+    "q_global_23.json",
+    "q_global_37.json",
+    "q_global_41.json",
+    "q_global_53.json",
+    "q_global_67.json",
+    "q_global_71.json",
+    "q_global_83.json",
+    "q_global_97.json",
+    "q_global_101.json",
+    "q_global_107.json",
+    "q_global_109.json",
+    "q_global_127.json",
+    "q_global_131.json",
+    "q_global_137.json",
+    "q_global_149.json",
+    "q_global_157.json",
+    "q_global_163.json",
+    "q_global_173.json",
+    "q_global_179.json",
+    "q_mixed_11.json",
+    "q_mixed_23.json",
+    "q_mixed_37.json",
+    "q_mixed_41.json",
+    "q_mixed_53.json",
+    "q_mixed_67.json",
+    "q_mixed_71.json",
+    "q_mixed_83.json",
+    "q_mixed_97.json",
+    "q_mixed_101.json",
+    "q_mixed_107.json",
+    "q_mixed_109.json",
+    "q_mixed_127.json",
+    "q_mixed_131.json",
+    "q_mixed_137.json",
+    "q_mixed_149.json",
+    "q_mixed_157.json",
+    "q_mixed_163.json",
+    "q_mixed_173.json",
+    "q_mixed_179.json"
+  ],
+  "evaluation": "20 common held-out demand seeds per policy and training seed"
+}

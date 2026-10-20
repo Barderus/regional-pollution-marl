@@ -3,4 +3,9 @@ name = "regional-pollution-marl"
 version = "0.1.0"
 description = "Synthetic four-region pollution coordination with independent tabular Q-learning"
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "ipykernel>=7.4.0",
+]
+
+[project.optional-dependencies]
+notebooks = ["jupyterlab", "pandas", "matplotlib"]

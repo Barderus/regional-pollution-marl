@@ -1,0 +1,228 @@
+{
+  "question": "Cost-matched monotone rule baselines",
+  "source": "notebooks/04_cost_matched_baselines.ipynb",
+  "saved_models_directory": "../results/followup/spillover_02",
+  "environment": {
+    "neighbors": {
+      "0": [
+        1,
+        2
+      ],
+      "1": [
+        0,
+        3
+      ],
+      "2": [
+        0,
+        3
+      ],
+      "3": [
+        1,
+        2
+      ]
+    },
+    "base_emissions": [
+      2,
+      5,
+      8
+    ],
+    "mitigation_fractions": [
+      0.1,
+      0.3,
+      0.5
+    ],
+    "action_costs": [
+      1,
+      4,
+      9
+    ],
+    "persistence": 0.8,
+    "spillover": 0.2,
+    "episode_steps": 50
+  },
+  "training_seeds": [
+    11,
+    23,
+    37,
+    41,
+    53,
+    67,
+    71,
+    83,
+    97,
+    101,
+    107,
+    109,
+    127,
+    131,
+    137,
+    149,
+    157,
+    163,
+    173,
+    179
+  ],
+  "development_seeds": [
+    200000,
+    200001,
+    200002,
+    200003,
+    200004,
+    200005,
+    200006,
+    200007,
+    200008,
+    200009,
+    200010,
+    200011,
+    200012,
+    200013,
+    200014,
+    200015,
+    200016,
+    200017,
+    200018,
+    200019
+  ],
+  "evaluation_seeds": [
+    100000,
+    100001,
+    100002,
+    100003,
+    100004,
+    100005,
+    100006,
+    100007,
+    100008,
+    100009,
+    100010,
+    100011,
+    100012,
+    100013,
+    100014,
+    100015,
+    100016,
+    100017,
+    100018,
+    100019
+  ],
+  "candidate_rules": {
+    "rule_0000": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_0001": [
+      0,
+      0,
+      0,
+      1
+    ],
+    "rule_0002": [
+      0,
+      0,
+      0,
+      2
+    ],
+    "rule_0011": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "rule_0012": [
+      0,
+      0,
+      1,
+      2
+    ],
+    "rule_0022": [
+      0,
+      0,
+      2,
+      2
+    ],
+    "rule_0111": [
+      0,
+      1,
+      1,
+      1
+    ],
+    "rule_0112": [
+      0,
+      1,
+      1,
+      2
+    ],
+    "rule_0122": [
+      0,
+      1,
+      2,
+      2
+    ],
+    "rule_0222": [
+      0,
+      2,
+      2,
+      2
+    ],
+    "rule_1111": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "rule_1112": [
+      1,
+      1,
+      1,
+      2
+    ],
+    "rule_1122": [
+      1,
+      1,
+      2,
+      2
+    ],
+    "rule_1222": [
+      1,
+      2,
+      2,
+      2
+    ],
+    "rule_2222": [
+      2,
+      2,
+      2,
+      2
+    ]
+  },
+  "selected_matches": {
+    "iql_local": "rule_0011",
+    "iql_global": "rule_0111",
+    "iql_mixed": "rule_0012"
+  },
+  "mixtures": [
+    {
+      "learner": "iql_local",
+      "lower_rule": "rule_0002",
+      "upper_rule": "rule_0011",
+      "upper_fraction": 0.9687226048841577
+    },
+    {
+      "learner": "iql_global",
+      "lower_rule": "rule_0012",
+      "upper_rule": "rule_0111",
+      "upper_fraction": 0.8967164807408964
+    },
+    {
+      "learner": "iql_mixed",
+      "lower_rule": "rule_0012",
+      "upper_rule": "rule_0111",
+      "upper_fraction": 0.14451694380130511
+    }
+  ],
+  "selection_metric": "Mean mitigation cost on development demand seeds",
+  "status": "Exploratory follow-up"
+}

@@ -1,0 +1,146 @@
+{
+  "question": "Neighbor harm reward at spillover 0.2",
+  "source": "notebooks/05_neighbor_harm_reward.ipynb",
+  "command": "Run all cells from the notebooks working directory",
+  "environment": {
+    "neighbors": {
+      "0": [
+        1,
+        2
+      ],
+      "1": [
+        0,
+        3
+      ],
+      "2": [
+        0,
+        3
+      ],
+      "3": [
+        1,
+        2
+      ]
+    },
+    "base_emissions": [
+      2,
+      5,
+      8
+    ],
+    "mitigation_fractions": [
+      0.1,
+      0.3,
+      0.5
+    ],
+    "action_costs": [
+      1,
+      4,
+      9
+    ],
+    "persistence": 0.8,
+    "spillover": 0.2,
+    "episode_steps": 50
+  },
+  "training": {
+    "learning_rate": 0.1,
+    "discount_factor": 0.95,
+    "epsilon_start": 1.0,
+    "epsilon_decay": 0.995,
+    "epsilon_minimum": 0.05,
+    "training_episodes": 2000,
+    "training_seeds": [
+      11,
+      23,
+      37,
+      41,
+      53,
+      67,
+      71,
+      83,
+      97,
+      101,
+      107,
+      109,
+      127,
+      131,
+      137,
+      149,
+      157,
+      163,
+      173,
+      179
+    ],
+    "evaluation_seeds": [
+      100000,
+      100001,
+      100002,
+      100003,
+      100004,
+      100005,
+      100006,
+      100007,
+      100008,
+      100009,
+      100010,
+      100011,
+      100012,
+      100013,
+      100014,
+      100015,
+      100016,
+      100017,
+      100018,
+      100019
+    ]
+  },
+  "new_weights": {
+    "externality_05": 0.5,
+    "externality_10": 1.0
+  },
+  "reused_weight_zero": "../results/followup/spillover_02",
+  "zero_spillover_reference": "../results/followup/spillover_00",
+  "models": [
+    "q_externality_05_11.json",
+    "q_externality_05_23.json",
+    "q_externality_05_37.json",
+    "q_externality_05_41.json",
+    "q_externality_05_53.json",
+    "q_externality_05_67.json",
+    "q_externality_05_71.json",
+    "q_externality_05_83.json",
+    "q_externality_05_97.json",
+    "q_externality_05_101.json",
+    "q_externality_05_107.json",
+    "q_externality_05_109.json",
+    "q_externality_05_127.json",
+    "q_externality_05_131.json",
+    "q_externality_05_137.json",
+    "q_externality_05_149.json",
+    "q_externality_05_157.json",
+    "q_externality_05_163.json",
+    "q_externality_05_173.json",
+    "q_externality_05_179.json",
+    "q_externality_10_11.json",
+    "q_externality_10_23.json",
+    "q_externality_10_37.json",
+    "q_externality_10_41.json",
+    "q_externality_10_53.json",
+    "q_externality_10_67.json",
+    "q_externality_10_71.json",
+    "q_externality_10_83.json",
+    "q_externality_10_97.json",
+    "q_externality_10_101.json",
+    "q_externality_10_107.json",
+    "q_externality_10_109.json",
+    "q_externality_10_127.json",
+    "q_externality_10_131.json",
+    "q_externality_10_137.json",
+    "q_externality_10_149.json",
+    "q_externality_10_157.json",
+    "q_externality_10_163.json",
+    "q_externality_10_173.json",
+    "q_externality_10_179.json"
+  ],
+  "reward_formula": "local_reward_i - weight * sum_neighbor_counterfactual_exposure_increase",
+  "evaluation": "20 common held-out demand seeds per training seed",
+  "status": "Exploratory follow-up"
+}

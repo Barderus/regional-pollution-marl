@@ -10,13 +10,14 @@ from environment import PollutionEnvironment
 REWARD_MODES = ("local", "global", "mixed")
 
 
-def train_iql(reward_mode, training_seed, config=None, environment_config=None):
+def train_iql(reward_mode, training_seed, config=None, environment_config=None,
+              externality_weight=0.0):
     settings = config or TrainingConfig()
 
-    if reward_mode not in REWARD_MODES:
+    if reward_mode not in REWARD_MODES + ("externality",):
         raise ValueError(reward_mode)
 
-    environment = PollutionEnvironment(reward_mode, environment_config)
+    environment = PollutionEnvironment(reward_mode, environment_config, externality_weight)
     episode_rng = random.Random(training_seed)
     agents = tuple(TabularQLearner(training_seed * 10 + i, settings) for i in range(4))
 

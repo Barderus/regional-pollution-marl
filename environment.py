@@ -12,13 +12,20 @@ def pollution_bin(load):
         return 2
     return 3
 
+
+def exposure_penalty(load):
+    return load + 0.2 * max(0.0, load - 30) ** 2
+
 # Four regions with independent, seeded demand changes
 class PollutionEnvironment:
 
-    def __init__(self, reward_mode="local", config=None):
-        if reward_mode not in ("local", "global", "mixed"):
+    def __init__(self, reward_mode="local", config=None, externality_weight=0.0):
+        if reward_mode not in ("local", "global", "mixed", "externality"):
             raise ValueError(f"Unknown reward mode: {reward_mode}")
+        if externality_weight < 0 or (reward_mode != "externality" and externality_weight != 0):
+            raise ValueError("Externality weight requires externality mode and cannot be negative")
         self.reward_mode = reward_mode
+        self.externality_weight = externality_weight
         self.config = config or EnvironmentConfig()
         self.rng = random.Random()
         self.demand = ()
@@ -57,7 +64,7 @@ class PollutionEnvironment:
         )
 
         costs = tuple(config.action_costs[action] for action in actions)
-        exposure = tuple(load + 0.2 * max(0.0, load - 30) ** 2 for load in new_loads)
+        exposure = tuple(exposure_penalty(load) for load in new_loads)
         local_rewards = tuple(-penalty - 2 * cost for penalty, cost in zip(exposure, costs))
         global_reward = sum(local_rewards) / 4
         mixed_rewards = tuple(0.7 * reward + 0.3 * global_reward for reward in local_rewards)
@@ -67,7 +74,18 @@ class PollutionEnvironment:
             "mixed": mixed_rewards,
         }
 
-        rewards = rewards_by_mode[self.reward_mode]
+        if self.reward_mode == "externality":
+            # Remove this region's spillover from each neighbor's load to measure its harm.
+            neighbor_harm = tuple(
+                sum(exposure[neighbor] - exposure_penalty(
+                    new_loads[neighbor] - config.spillover * emissions[region]
+                ) for neighbor in config.neighbors[region])
+                for region in range(4)
+            )
+            rewards = tuple(local_rewards[region] - self.externality_weight * neighbor_harm[region]
+                            for region in range(4))
+        else:
+            rewards = rewards_by_mode[self.reward_mode]
         self.loads = new_loads
 
         # Demand changes only after rewards are calculated, for the next observation.
@@ -86,4 +104,7 @@ class PollutionEnvironment:
             "global_reward": global_reward,
             "mixed_rewards": mixed_rewards,
         }
+        if self.reward_mode == "externality":
+            info["neighbor_harm"] = neighbor_harm
+            info["externality_rewards"] = rewards
         return self._observations(), rewards, self.time == config.episode_steps, info

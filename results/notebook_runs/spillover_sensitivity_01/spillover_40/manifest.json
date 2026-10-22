@@ -1,0 +1,139 @@
+{
+  "question": "Local versus neighbor-harm reward across spillover strengths",
+  "source": "notebooks/06_spillover_sensitivity.ipynb",
+  "command": "Run all cells from the notebooks working directory",
+  "environment": {
+    "neighbors": {
+      "0": [
+        1,
+        2
+      ],
+      "1": [
+        0,
+        3
+      ],
+      "2": [
+        0,
+        3
+      ],
+      "3": [
+        1,
+        2
+      ]
+    },
+    "base_emissions": [
+      2,
+      5,
+      8
+    ],
+    "mitigation_fractions": [
+      0.1,
+      0.3,
+      0.5
+    ],
+    "action_costs": [
+      1,
+      4,
+      9
+    ],
+    "persistence": 0.8,
+    "spillover": 0.4,
+    "episode_steps": 50
+  },
+  "training": {
+    "learning_rate": 0.1,
+    "discount_factor": 0.95,
+    "epsilon_start": 1.0,
+    "epsilon_decay": 0.995,
+    "epsilon_minimum": 0.05,
+    "training_episodes": 2000,
+    "training_seeds": [
+      11,
+      23,
+      37,
+      41,
+      53,
+      67,
+      71,
+      83,
+      97,
+      101,
+      107,
+      109,
+      127,
+      131,
+      137,
+      149,
+      157,
+      163,
+      173,
+      179
+    ],
+    "evaluation_seeds": [
+      100000,
+      100001,
+      100002,
+      100003,
+      100004,
+      100005,
+      100006,
+      100007,
+      100008,
+      100009,
+      100010,
+      100011,
+      100012,
+      100013,
+      100014,
+      100015,
+      100016,
+      100017,
+      100018,
+      100019
+    ]
+  },
+  "neighbor_harm_weight": 1.0,
+  "models": [
+    "q_local_11.json",
+    "q_local_23.json",
+    "q_local_37.json",
+    "q_local_41.json",
+    "q_local_53.json",
+    "q_local_67.json",
+    "q_local_71.json",
+    "q_local_83.json",
+    "q_local_97.json",
+    "q_local_101.json",
+    "q_local_107.json",
+    "q_local_109.json",
+    "q_local_127.json",
+    "q_local_131.json",
+    "q_local_137.json",
+    "q_local_149.json",
+    "q_local_157.json",
+    "q_local_163.json",
+    "q_local_173.json",
+    "q_local_179.json",
+    "q_neighbor_harm_11.json",
+    "q_neighbor_harm_23.json",
+    "q_neighbor_harm_37.json",
+    "q_neighbor_harm_41.json",
+    "q_neighbor_harm_53.json",
+    "q_neighbor_harm_67.json",
+    "q_neighbor_harm_71.json",
+    "q_neighbor_harm_83.json",
+    "q_neighbor_harm_97.json",
+    "q_neighbor_harm_101.json",
+    "q_neighbor_harm_107.json",
+    "q_neighbor_harm_109.json",
+    "q_neighbor_harm_127.json",
+    "q_neighbor_harm_131.json",
+    "q_neighbor_harm_137.json",
+    "q_neighbor_harm_149.json",
+    "q_neighbor_harm_157.json",
+    "q_neighbor_harm_163.json",
+    "q_neighbor_harm_173.json",
+    "q_neighbor_harm_179.json"
+  ],
+  "status": "Exploratory follow-up"
+}

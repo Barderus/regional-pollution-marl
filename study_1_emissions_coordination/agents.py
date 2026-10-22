@@ -1,7 +1,7 @@
 # Independent tabular Q-learning with local observations
 
 import random
-from config import TrainingConfig
+from study_1_emissions_coordination.config import TrainingConfig
 
 
 class TabularQLearner:

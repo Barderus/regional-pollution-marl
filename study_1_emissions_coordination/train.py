@@ -3,9 +3,9 @@
 import json
 import random
 
-from agents import TabularQLearner
-from config import EnvironmentConfig, TrainingConfig
-from environment import PollutionEnvironment
+from study_1_emissions_coordination.agents import TabularQLearner
+from study_1_emissions_coordination.config import EnvironmentConfig, TrainingConfig
+from study_1_emissions_coordination.environment import PollutionEnvironment
 
 REWARD_MODES = ("local", "global", "mixed")
 
@@ -51,13 +51,13 @@ def save_agents(filename, agents):
 
 
 def main():
-    output_directory = "results/raw"
+    output_directory = "study_1_emissions_coordination/results/raw"
     config = TrainingConfig()
 
     manifest = {
         "environment": vars(EnvironmentConfig()),
         "training": vars(config),
-        "command": "python train.py",
+        "command": "python -m study_1_emissions_coordination.train",
         "reward_modes": list(REWARD_MODES),
         "models": [f"q_{mode}_{seed}.json" for mode in REWARD_MODES for seed in config.training_seeds],
         "hypotheses": ["Shared rewards may reduce total exposure.",

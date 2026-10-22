@@ -4,15 +4,15 @@ import json
 import random
 from collections import defaultdict
 
-from baselines import fixed_medium_action, random_action, threshold_action
-from config import TrainingConfig
-from environment import PollutionEnvironment
-from evaluate import write_csv
-from run_followup import greedy_actions, load_agents
+from study_1_emissions_coordination.baselines import fixed_medium_action, random_action, threshold_action
+from study_1_emissions_coordination.config import TrainingConfig
+from study_1_emissions_coordination.environment import PollutionEnvironment
+from study_1_emissions_coordination.evaluate import write_csv
+from study_1_emissions_coordination.run_followup import greedy_actions, load_agents
 
 
-OUTPUT_DIRECTORY = "results/followup/diagnostics"
-BASELINE_DIRECTORY = "results/raw"
+OUTPUT_DIRECTORY = "study_1_emissions_coordination/results/followup/diagnostics"
+BASELINE_DIRECTORY = "study_1_emissions_coordination/results/raw"
 EXAMPLE_SEED = 100000
 
 

@@ -60,8 +60,8 @@ def plot_pollution_vs_cost(results_path, output_path):
 
 
 def main():
-    results_path = "results/raw/policy_summary.csv"
-    output_path = "results/figures/pollution_vs_cost.svg"
+    results_path = "study_1_emissions_coordination/results/raw/policy_summary.csv"
+    output_path = "study_1_emissions_coordination/results/figures/pollution_vs_cost.svg"
     plot_pollution_vs_cost(results_path, output_path)
     print(f"Saved {output_path}")
 

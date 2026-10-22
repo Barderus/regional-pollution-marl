@@ -1,7 +1,7 @@
 # Simultaneous mitigation and persistent pollution in arbitrary units
 
 import random
-from config import EnvironmentConfig
+from study_1_emissions_coordination.config import EnvironmentConfig
 
 def pollution_bin(load):
     if load < 15:

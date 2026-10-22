@@ -5,17 +5,17 @@ import random
 import statistics
 from collections import defaultdict
 
-from agents import TabularQLearner
-from baselines import fixed_medium_action, random_action, threshold_action
-from config import EnvironmentConfig, TrainingConfig
-from evaluate import evaluate_policy, summarize_by_policy, summarize_by_training_seed, write_csv
-from train import REWARD_MODES, save_agents, train_iql
+from study_1_emissions_coordination.agents import TabularQLearner
+from study_1_emissions_coordination.baselines import fixed_medium_action, random_action, threshold_action
+from study_1_emissions_coordination.config import EnvironmentConfig, TrainingConfig
+from study_1_emissions_coordination.evaluate import evaluate_policy, summarize_by_policy, summarize_by_training_seed, write_csv
+from study_1_emissions_coordination.train import REWARD_MODES, save_agents, train_iql
 
 
 TRAINING_SEEDS = (11, 23, 37, 41, 53, 67, 71, 83, 97, 101, 107,
                   109, 127, 131, 137, 149, 157, 163, 173, 179)
 SCENARIOS = (("spillover_02", 0.2), ("spillover_00", 0.0))
-OUTPUT_DIRECTORY = "results/followup"
+OUTPUT_DIRECTORY = "study_1_emissions_coordination/results/followup"
 
 
 def load_agents(filename, training_seed, settings):
@@ -53,7 +53,7 @@ def run_scenario(name, spillover, settings):
     manifest = {
         "environment": vars(environment_config),
         "training": vars(settings),
-        "command": "python run_followup.py",
+        "command": "python -m study_1_emissions_coordination.run_followup",
         "reward_modes": list(REWARD_MODES),
         "models": [f"q_{mode}_{seed}.json" for mode in REWARD_MODES
                    for seed in settings.training_seeds],

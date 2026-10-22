@@ -5,8 +5,8 @@ from collections import defaultdict
 from html import escape
 
 
-OUTPUT_DIRECTORY = "results/followup"
-FIGURE_DIRECTORY = "results/followup/figures"
+OUTPUT_DIRECTORY = "study_1_emissions_coordination/results/followup"
+FIGURE_DIRECTORY = "study_1_emissions_coordination/results/followup/figures"
 POLICIES = ("fixed_medium", "random", "threshold", "iql_local", "iql_global", "iql_mixed")
 COLORS = {"fixed_medium": "#1769aa", "random": "#626b75", "threshold": "#8751a3",
           "iql_local": "#d35400", "iql_global": "#16845b", "iql_mixed": "#bc2f45"}

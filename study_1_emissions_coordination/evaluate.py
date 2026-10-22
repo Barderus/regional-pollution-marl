@@ -6,10 +6,10 @@ import random
 import statistics
 from collections import defaultdict
 
-from agents import TabularQLearner
-from baselines import fixed_medium_action, random_action, threshold_action
-from config import TrainingConfig
-from environment import PollutionEnvironment
+from study_1_emissions_coordination.agents import TabularQLearner
+from study_1_emissions_coordination.baselines import fixed_medium_action, random_action, threshold_action
+from study_1_emissions_coordination.config import TrainingConfig
+from study_1_emissions_coordination.environment import PollutionEnvironment
 
 METRICS = ("mean_regional_pollution", "mitigation_cost", "threshold_exceedance",
            "emitted_units", "regional_pollution_spread", "action_0_fraction",
@@ -106,7 +106,7 @@ def write_csv(filename, rows):
 
 
 def main():
-    results_directory = "results/raw"
+    results_directory = "study_1_emissions_coordination/results/raw"
 
     with open(f"{results_directory}/manifest.json", encoding="utf-8") as file:
         manifest = json.load(file)

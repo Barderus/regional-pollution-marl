@@ -2,7 +2,7 @@
 
 import unittest
 
-from agents import TabularQLearner
+from study_1_emissions_coordination.agents import TabularQLearner
 
 
 class AgentTests(unittest.TestCase):

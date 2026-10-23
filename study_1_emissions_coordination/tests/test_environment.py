@@ -2,8 +2,8 @@
 
 import unittest
 
-from baselines import fixed_medium_action, threshold_action
-from environment import PollutionEnvironment, pollution_bin
+from study_1_emissions_coordination.baselines import fixed_medium_action, threshold_action
+from study_1_emissions_coordination.environment import PollutionEnvironment, pollution_bin
 
 
 class EnvironmentTests(unittest.TestCase):

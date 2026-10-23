@@ -35,3 +35,11 @@ class EnvironmentConfig:
 
         # Truncation
         self.episode_steps = 200
+
+class TrainingConfig:
+    def __init__(self):
+        self.learning_rate = 0.1
+        self.discount_factor = 0.95
+        self.epsilon_start = 1.0
+        self.epsilon_decay = 0.995
+        self.epsilon_minimum = 0.05

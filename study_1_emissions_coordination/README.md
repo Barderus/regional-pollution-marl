@@ -1,33 +1,23 @@
 # Regional Pollution Coordination with Multi-Agent RL
 
-This project explores how independent agents can coordinate pollution reduction across neighboring regions using Multi-Agent Reinforcement Learning (MARL).
+## Motivation
 
-The idea is that each region is responsible for managing its own emissions, but pollution doesn't stay within regional boundaries. Decisions made by one region can affect its neighbors, creating a situation where what's best for one region might not be best for everyone.
+One region's emissions can affect its neighbors, so a good decision for one region may be a poor one for the group. I built this simulation to see how the agents' rewards affect their mitigation decisions.
 
-I'm using this environment to explore how different reward structures influence agent behavior, particularly when agents have limited information about the rest of the system.
+## Method
 
-## The Environment
+The simulation has four regions arranged in a square. Each region chooses low, medium, or high mitigation based only on its own demand category and pollution bin. Pollution persists over time and spreads to neighboring regions.
 
-The simulation consists of four neighboring regions, each controlled by an independent Q-learning agent.
+I trained independent tabular Q-learning agents with local, global, and mixed rewards. I compared them with random actions, fixed-medium mitigation, and simple threshold rules. The results use 20 training seeds, evaluated on the same 20 demand sequences. I report pollution and mitigation cost separately. Cost is a penalty in the simulation, not money.
 
-Each agent chooses between three mitigation levels based on its local observations. I'm experimenting with three reward structures:
+## Results
 
-- **Local:** Agents prioritize their own regional outcomes.
-- **Global:** Agents consider the overall system.
-- **Mixed:** Agents balance local and global objectives.
+With neighbor spillover set to 0.2, agents trained with a global reward averaged **24.97** regional pollution and **757** mitigation cost per episode. With a local reward, they averaged **26.18** pollution and **527** cost. Global rewards reduced pollution in 18 of 20 paired training runs, but cost more in all 20.
 
-I'm also comparing the learned policies against simpler approaches, including random actions, fixed mitigation, and threshold-based rules.
+Fixed-medium mitigation had the lowest average pollution in this sample (**23.88**), at a cost of **800**. At similar costs, mixtures of simple threshold rules matched or improved on the learned policies' pollution results. The reward choice changed the balance between pollution and cost, and learning did not consistently beat the simpler rules.
 
-## Current Progress
+I also tried removing spillover and adding a reward term for reducing harm to neighbors. Removing spillover did not clearly change the pollution gap between global and local rewards. The neighbor-harm reward sometimes reduced pollution, usually with higher mitigation cost, but results varied substantially between runs.
 
-The initial experiments show that global rewards generally lead to lower pollution than local rewards, although they come with higher mitigation costs. A simple fixed-mitigation policy also performed well, which raises questions about when reinforcement learning is actually beneficial.
+## Limitations
 
-I've also explored pollution spillover, alternative reward designs, and how agents change their mitigation decisions under different conditions.
-
-The notebooks and results are available in the `notebooks/` and `results/` directories.
-
-## Next Steps
-
-I plan to experiment with different regional networks, environmental parameters, and coordination strategies to better understand how independent agents can balance individual and shared objectives.
-
-This is a synthetic environment designed to study decentralized decision-making, not to model or predict real-world pollution.
+The simulation uses arbitrary units, fixed assumptions, one four-region network, and limited information for each agent. It helps study how agents learn in this setting; it does not model real pollution or support policy decisions. Other network layouts and parameter values are still open questions. The notebooks and saved results are in `notebooks/` and `results/`.

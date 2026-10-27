@@ -18,13 +18,11 @@ class EnvironmentConfig:
         self.action_costs = (0, 100, 10, 25, 50)
         self.mitigation_capacity = (0, 0, 5, 15, 30)
 
-        # Eighty percent of old pollution remains each step. Each neighbor's
-        # remaining emissions add another 20 percent to a region's load.
+        # Eighty percent of old pollution remains each step. Each neighbor's remaining emissions add another 20 percent to a region's load.
         self.persistence = 0.8
         self.spillover = 0.2
 
-        # Any region reaching 100 ends the episode. All agents then receive
-        # the failure penalty. An invalid attempt penalizes its own region.
+        # Any region reaching 100 ends the episode. All agents then receive the failure penalty. An invalid attempt penalizes its own region.
         self.failure_threshold = 100.0
         self.failure_penalty = 100.0
         self.invalid_action_penalty = 10.0

@@ -1,6 +1,6 @@
 # Study 2: Economic Development and Environmental Sustainability
 
-**Status: Environment implemented; agents and experiments planned**
+**Status: Initial comparison completed**
 
 ## Overview
 
@@ -14,7 +14,7 @@ I'm interested in exploring how independent agents balance their own economic gr
 
 ## The Environment
 
-The simulation has four neighboring regions. Each will eventually be controlled by an independent Q-learning agent.
+The simulation has four neighboring regions. Each can use a separate Q-learning agent with its own Q-table.
 
 Each agent will choose between five actions:
 
@@ -34,12 +34,23 @@ Unlike Study 1, mitigation and development will require agents to spend currency
 
 ## Current status
 
-The environment and its settings are in `environment.py` and `config.py`. It accepts four actions at a time and returns each region's next observation and reward, separate termination and time-limit flags, and the underlying quantities used in the transition. With a reset seed, the four starting currency balances can be reproduced. The mechanics still need focused validation before agent training.
+The environment and its settings are in `environment.py` and `config.py`. It accepts four actions at a time and returns each region's next observation and reward, separate termination and time-limit flags, and the underlying quantities used in the transition. With a reset seed, the four starting currency balances can be reproduced.
 
-## Next Steps
+`agents.py` contains the tabular Q-learning agent. It can attempt any of the five actions; the environment decides whether an attempt is valid. The agent does not use a future-state value after environmental failure, but it does after an episode reaches the time limit. Focused checks cover the environment mechanics and learning update.
 
-After checking the environment mechanics, I plan to add the agents and compare their reward structures against simpler policies. I'll examine economic growth, pollution, resource management, and the risk of environmental failure.
+The pilot ran five simple policies over 20 matched starting seeds. Development alone caused environmental failure in all 20 episodes; the mitigation and coordination policies reached the 200-step limit in all 20. I kept the agreed environment settings for the initial reward comparison.
 
-The goal is to better understand how independent agents make decisions when pursuing their own development can put the entire system at risk.
+In the saved initial run, I trained local, global, and mixed reward agents for 2,000 episodes under each of five training seeds, then evaluated them on the same 20 held-out starts. None failed in these evaluations. Local and mixed rewards had lower average GPI than global reward, with higher mitigation spending. The fixed mitigation baseline had even lower GPI and spending, but finished with no economic development. These are outcomes under the current synthetic rules, not a general ranking of reward designs.
 
-This is a synthetic environment designed to explore multi-agent decision-making, not to represent real economic or environmental systems.
+## Reproducing the runs
+
+The work is organized in four notebooks:
+
+- [00: Baselines](notebooks/00_baselines_preview.ipynb) shows each of the five fixed rules on a few starts.
+- [01: Experiments](notebooks/01_experiments_preview.ipynb) shows a short Q-learning run and reward comparison.
+- [02: Pilot dynamics](notebooks/02_pilot_dynamics.ipynb) checks the five rules across 20 starts and plots one trajectory.
+- [03: Reward comparison](notebooks/03_reward_comparison.ipynb) trains five seeds per reward mode and evaluates each policy on 20 held-out starts.
+
+## Next steps
+
+I want to inspect learned action choices and whether the comparison changes across more seeds or different reward-component weights. This is a synthetic environment for studying agent behavior, not a model of real economic or environmental systems.

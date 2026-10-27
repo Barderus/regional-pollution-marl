@@ -1,0 +1,101 @@
+{
+  "environment": {
+    "neighbors": {
+      "0": [
+        1,
+        2
+      ],
+      "1": [
+        0,
+        3
+      ],
+      "2": [
+        0,
+        3
+      ],
+      "3": [
+        1,
+        2
+      ]
+    },
+    "initial_pollution": 10.0,
+    "initial_currency_minimum": 100,
+    "initial_currency_maximum": 1000,
+    "income_base": 20.0,
+    "income_per_edi": 0.5,
+    "emissions_base": 8.0,
+    "action_costs": [
+      0,
+      100,
+      10,
+      25,
+      50
+    ],
+    "mitigation_capacity": [
+      0,
+      0,
+      5,
+      15,
+      30
+    ],
+    "persistence": 0.8,
+    "spillover": 0.2,
+    "failure_threshold": 100.0,
+    "failure_penalty": 100.0,
+    "invalid_action_penalty": 10.0,
+    "economy_weight": 1.0,
+    "pollution_weight": 1.0,
+    "episode_steps": 200
+  },
+  "training": {
+    "learning_rate": 0.1,
+    "discount_factor": 0.95,
+    "epsilon_start": 1.0,
+    "epsilon_decay": 0.995,
+    "epsilon_minimum": 0.05
+  },
+  "reward_modes": [
+    "local",
+    "global",
+    "mixed"
+  ],
+  "training_seeds": [
+    11,
+    23,
+    37,
+    41,
+    53
+  ],
+  "evaluation_seeds": [
+    100000,
+    100001,
+    100002,
+    100003,
+    100004,
+    100005,
+    100006,
+    100007,
+    100008,
+    100009,
+    100010,
+    100011,
+    100012,
+    100013,
+    100014,
+    100015,
+    100016,
+    100017,
+    100018,
+    100019
+  ],
+  "training_episodes_per_seed": 2000,
+  "baseline_names": [
+    "save",
+    "develop",
+    "mitigate",
+    "coordinate",
+    "random_affordable"
+  ],
+  "random_baseline_action_seed_rule": "environment seed + 2000000",
+  "notebook": "study_2_economic_sustainability/notebooks/03_reward_comparison.ipynb"
+}

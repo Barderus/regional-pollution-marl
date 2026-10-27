@@ -1,0 +1,6 @@
+policy,failure_fraction,mean_steps,mean_gpi,mean_final_edi,mitigation_spending,invalid_attempts
+save,0.0,200.0,55.08000000000002,0.0,0.0,0.0
+develop,1.0,24.3,72.5581433036896,82.325,0.0,0.0
+mitigate,0.0,200.0,1.363777499999999,0.0,18177.75,0.0
+coordinate,0.0,200.0,28.445559182462148,70.0,14621.25,0.0
+random_affordable,0.0,200.0,32.28696963349539,100.0,14873.25,0.0

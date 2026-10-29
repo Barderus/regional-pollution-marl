@@ -1,33 +1,37 @@
 # Regional Pollution MARL
 
-This repository explores how independent agents make decisions when their individual goals can affect the rest of the system. I'm using Multi-Agent Reinforcement Learning (MARL) to simulate neighboring regions that must balance their own interests with shared environmental challenges.
+This project explores how independent agents make decisions when their actions affect other regions. I'm using Multi-Agent Reinforcement Learning (MARL) to study how agents balance their own interests with shared environmental challenges.
 
-The project is divided into two studies. Both use a simulated environment with four neighboring regions, but explore different aspects of decentralized decision-making.
+The project is divided into two studies. Both use a simulated environment with four neighboring regions, but focus on different questions about decentralized decision-making.
 
 ## Study 1: Regional Emissions Coordination
 
 The [first study](study_1_emissions_coordination/README.md) focuses on how different reward structures influence pollution mitigation.
 
-Each region is controlled by an independent Q-learning agent that decides how much to reduce its emissions. I'm comparing local, global, and mixed rewards to see how agents behave when prioritizing their own region versus the overall system.
+Each region has an independent Q-learning agent that decides how much to reduce its emissions. I compare local, global, and mixed rewards to see how agents behave when prioritizing their own region versus the overall system.
 
-The initial results show that global rewards generally lead to lower pollution than local rewards, but with higher mitigation costs. Interestingly, simpler strategies also performed well, raising questions about when reinforcement learning provides an advantage.
+The initial results show that global rewards generally lead to lower pollution than local rewards, but with higher mitigation costs. Simpler strategies also performed well, raising questions about when reinforcement learning provides an advantage.
 
-The study also explores how pollution spreading between regions affects agent behavior.
+The study also looks at how pollution spreading between neighboring regions affects agent behavior.
 
 ## Study 2: Economic Development and Environmental Sustainability
 
-The [second study](study_2_economic_sustainability) builds on the first by introducing economic development and resource management.
+The [second study](study_2_economic_sustainability/README.md) builds on the first by introducing economic development and resource management.
 
-Alongside pollution mitigation, agents decide when to invest in development, save currency, or pay to reduce emissions.
+Each region must decide whether to invest in economic growth, spend currency on pollution mitigation, or save for future decisions.
 
-The challenge is that regions want to grow economically, but excessive pollution in any one region can cause the entire system to fail.
+The challenge is that development increases emissions, pollution spreads between regions, and excessive pollution in any region can cause the entire system to fail.
 
-The initial comparison tests local, global, and mixed rewards against simple policies.
+I've tested different environment settings, pollution mechanics, and economic rewards to create a trade-off between development and sustainability.
+
+The next step is to compare local, global, and mixed rewards under the updated environment to see how agents balance economic growth with environmental constraints.
 
 ## Project Direction
 
-Both studies are part of my broader interest in decentralized multi-agent decision-making, particularly how agents balance individual and shared objectives with limited information.
+Both studies are part of my interest in decentralized multi-agent decision-making, especially how agents balance individual and shared objectives.
 
-As the project develops, I want to explore different environments, regional connections, and coordination strategies to better understand when independent agents can achieve better outcomes through cooperation.
+As I continue working on this project, I want to explore how different reward structures, environmental conditions, and coordination strategies affect the decisions agents make.
 
-These are synthetic simulations designed to explore agent behavior, not predict real-world pollution or economic outcomes.
+The goal is to better understand when independent agents can learn to make decisions that benefit both themselves and the larger system.
+
+These are synthetic simulations designed to study agent behavior, not predict real-world environmental or economic outcomes.

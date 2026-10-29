@@ -9,10 +9,12 @@ class EnvironmentConfig:
 
         # EDI means Economic Development Index (0 to 100).
         # Income = 20 + 0.5 * EDI currency per step.
-        # Base emissions = 8 * (1 + EDI / 100) arbitrary units per step.
+        # Emissions = emissions_base * (1 + emissions_edi_multiplier * EDI / 100).
+        # A multiplier of 1 keeps the original 8 to 16 emission range.
         self.income_base = 20.0
         self.income_per_edi = 0.5
         self.emissions_base = 8.0
+        self.emissions_edi_multiplier = 1.0
 
         # Action IDs: 0 save, 1 develop, 2 low mitigation, 3 medium mitigation, 4 high mitigation.
         self.action_costs = (0, 100, 10, 25, 50)

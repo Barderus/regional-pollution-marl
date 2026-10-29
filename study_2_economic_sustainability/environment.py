@@ -118,7 +118,9 @@ class EconomicSustainabilityEnvironment:
             action = actions[region]
 
             region_income = config.income_base + config.income_per_edi * current_edi
-            region_emissions = config.emissions_base * (1 + current_edi / 100)
+            region_emissions = config.emissions_base * (
+                1 + config.emissions_edi_multiplier * current_edi / 100
+            )
             can_pay = current_balance >= config.action_costs[action]
             can_develop = action != DEVELOPMENT_ACTION or current_edi < 100
             is_valid = can_pay and can_develop

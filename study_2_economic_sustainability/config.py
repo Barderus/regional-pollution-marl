@@ -9,16 +9,16 @@ class EnvironmentConfig:
 
         # EDI means Economic Development Index (0 to 100).
         # Income = 20 + 0.5 * EDI currency per step.
-        # Emissions = emissions_base * (1 + emissions_edi_multiplier * EDI / 100).
-        # A multiplier of 1 keeps the original 8 to 16 emission range.
+        # Gross emissions = 8 + 0.10 * EDI + 0.001 * EDI squared.
         self.income_base = 20.0
         self.income_per_edi = 0.5
         self.emissions_base = 8.0
-        self.emissions_edi_multiplier = 1.0
+        self.emissions_edi_linear = 0.10
+        self.emissions_edi_quadratic = 0.001
 
         # Action IDs: 0 save, 1 develop, 2 low mitigation, 3 medium mitigation, 4 high mitigation.
         self.action_costs = (0, 100, 10, 25, 50)
-        self.mitigation_capacity = (0, 0, 5, 15, 30)
+        self.mitigation_capacity = (0, 0, 5, 15, 20)
 
         # Eighty percent of old pollution remains each step. Each neighbor's remaining emissions add another 20 percent to a region's load.
         self.persistence = 0.8
@@ -29,7 +29,11 @@ class EnvironmentConfig:
         self.failure_penalty = 100.0
         self.invalid_action_penalty = 10.0
 
-        # Local reward combines the EDI gain with -(new pollution / 20)^2.
+        # The economic reward combines EDI gain with a scaled ongoing-income reward.
+        # Income above the base level is divided by this scale before it is added.
+        self.ongoing_income_reward_scale = 10.0
+
+        # Local reward combines the economic reward with -(new pollution / 20)^2.
         self.economy_weight = 1.0
         self.pollution_weight = 1.0
 

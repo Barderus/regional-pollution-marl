@@ -104,10 +104,10 @@ class EconomicSustainabilityEnvironment:
 
         # 1. Use the state at the start of the step for income, emissions, affordability, and development gains.
         income = []
-        base_emissions = []
+        gross_emissions = []
         valid_actions = []
         costs_paid = []
-        mitigation = []
+        mitigation_capacity = []
         development_gains = []
         new_balances = []
         new_development = []
@@ -118,8 +118,10 @@ class EconomicSustainabilityEnvironment:
             action = actions[region]
 
             region_income = config.income_base + config.income_per_edi * current_edi
-            region_emissions = config.emissions_base * (
-                1 + config.emissions_edi_multiplier * current_edi / 100
+            region_emissions = (
+                config.emissions_base
+                + config.emissions_edi_linear * current_edi
+                + config.emissions_edi_quadratic * current_edi ** 2
             )
             can_pay = current_balance >= config.action_costs[action]
             can_develop = action != DEVELOPMENT_ACTION or current_edi < 100
@@ -133,31 +135,39 @@ class EconomicSustainabilityEnvironment:
                 gain = min(100 - current_edi, development_gain(current_edi))
 
             income.append(region_income)
-            base_emissions.append(region_emissions)
+            gross_emissions.append(region_emissions)
             valid_actions.append(is_valid)
             costs_paid.append(paid)
-            mitigation.append(capacity)
+            mitigation_capacity.append(capacity)
             development_gains.append(gain)
             new_balances.append(current_balance - paid + region_income)
             new_development.append(current_edi + gain)
 
-        # 2. Purchased mitigation offsets new emissions first. Any unused capacity can remove old pollution after natural absorption.
+        # 2. Mitigation avoids new emissions. It does not clean up accumulated pollution.
+        emissions_avoided = []
         remaining_emissions = []
-        unused_mitigation = []
+        unused_mitigation_capacity = []
 
         for region in range(4):
-            remaining_emissions.append(max(0.0, base_emissions[region] - mitigation[region]))
-            unused_mitigation.append(max(0.0, mitigation[region] - base_emissions[region]))
+            avoided = min(gross_emissions[region], mitigation_capacity[region])
+            emissions_avoided.append(avoided)
+            remaining_emissions.append(gross_emissions[region] - avoided)
+            unused_mitigation_capacity.append(
+                max(0.0, mitigation_capacity[region] - gross_emissions[region])
+            )
 
         # 3. Calculate every new load from the old loads and the same set of post-mitigation emissions.
         incoming_spillover = []
         new_loads = []
 
         for region in range(4):
-            neighbor_emissions = sum(remaining_emissions[neighbor] for neighbor in config.neighbors[region])
+            neighbor_emissions = sum(
+                remaining_emissions[neighbor]
+                for neighbor in config.neighbors[region]
+            )
             spillover = config.spillover * neighbor_emissions
-            old_pollution_left = max(0.0, config.persistence * self.pollution_loads[region] - unused_mitigation[region])
-            new_load = old_pollution_left + remaining_emissions[region] + spillover
+            persisting_pollution = config.persistence * self.pollution_loads[region]
+            new_load = persisting_pollution + remaining_emissions[region] + spillover
 
             incoming_spillover.append(spillover)
             new_loads.append(new_load)
@@ -165,15 +175,26 @@ class EconomicSustainabilityEnvironment:
         new_global_index = sum(new_loads) / 4
 
         # 4. An invalid attempt costs no currency but lowers its own local reward
+        income_rewards = []
+        economic_rewards = []
         pollution_rewards = []
         local_rewards = []
 
         for region in range(4):
+            income_reward = (
+                income[region] - config.income_base
+            ) / config.ongoing_income_reward_scale
+            economic_reward = development_gains[region] + income_reward
             pollution_reward = -(new_loads[region] / 20) ** 2
-            local_reward = (config.economy_weight * development_gains[region] + config.pollution_weight * pollution_reward)
+            local_reward = (
+                config.economy_weight * economic_reward
+                + config.pollution_weight * pollution_reward
+            )
             if not valid_actions[region]:
                 local_reward -= config.invalid_action_penalty
 
+            income_rewards.append(income_reward)
+            economic_rewards.append(economic_reward)
             pollution_rewards.append(pollution_reward)
             local_rewards.append(local_reward)
 
@@ -208,16 +229,21 @@ class EconomicSustainabilityEnvironment:
             "costs_paid": tuple(costs_paid),
             "income": tuple(income),
             "development_gains": tuple(development_gains),
+            "income_rewards": tuple(income_rewards),
             "currency_balances": self.currency_balances,
             "development_indices": self.development_indices,
-            "base_emissions": tuple(base_emissions),
-            "mitigation_capacity": tuple(mitigation),
+            "gross_emissions": tuple(gross_emissions),
+            "base_emissions": tuple(gross_emissions),
+            "mitigation_capacity": tuple(mitigation_capacity),
+            "emissions_avoided": tuple(emissions_avoided),
             "remaining_emissions": tuple(remaining_emissions),
-            "unused_mitigation": tuple(unused_mitigation),
+            "unused_mitigation_capacity": tuple(unused_mitigation_capacity),
+            # Keep the old key as an alias for existing analysis notebooks.
+            "unused_mitigation": tuple(unused_mitigation_capacity),
             "incoming_spillover": tuple(incoming_spillover),
             "pollution_loads": self.pollution_loads,
             "global_pollution_index": self.global_pollution_index,
-            "economic_rewards": tuple(development_gains),
+            "economic_rewards": tuple(economic_rewards),
             "pollution_rewards": tuple(pollution_rewards),
             "local_rewards": tuple(local_rewards),
             "global_reward": global_reward,

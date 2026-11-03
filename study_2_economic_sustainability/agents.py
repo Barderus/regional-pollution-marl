@@ -1,5 +1,6 @@
 import random
 from study_2_economic_sustainability.config import TrainingConfig
+from study_2_economic_sustainability.environment import ACTION_NAMES
 
 class TabularQLearner:
     def __init__(self, seed, config=None):
@@ -7,25 +8,25 @@ class TabularQLearner:
         self.rng = random.Random(seed)
         self.epsilon = self.config.epsilon_start
 
-        # Create four learners to give the regions separate Q-tables.
         self.q = {}
 
     def _values(self, observation):
         if observation not in self.q:
-            self.q[observation] = [0.0, 0.0, 0.0, 0.0, 0.0]
+            self.q[observation] = [0.0] * len(ACTION_NAMES)
 
         return self.q[observation]
 
     def select_action(self, observation, greedy=False):
-        # Choose among all five actions, even those the region cannot afford
+        # Exploration can include unaffordable choices; the environment records
+        # and penalizes those attempts consistently across reward modes.
         if not greedy and self.rng.random() < self.epsilon:
-            return self.rng.randrange(5)
+            return self.rng.randrange(len(ACTION_NAMES))
 
         values = self._values(observation)
         best_action = 0
 
         # Strict comparison keeps the lowest action ID when values are tied
-        for action in range(1, 5):
+        for action in range(1, len(ACTION_NAMES)):
             if values[action] > values[best_action]:
                 best_action = action
 

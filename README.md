@@ -16,15 +16,9 @@ The study also looks at how pollution spreading between neighboring regions affe
 
 ## Study 2: Economic Development and Environmental Sustainability
 
-The [second study](study_2_economic_sustainability/README.md) builds on the first by introducing economic development and resource management.
+The [second study](study_2_economic_sustainability/README.md) adds economic development and environmental investment. The current design tracks air, water, soil, and noise pollution separately, with pollutant-specific transport and recovery. Regions can develop while investing in emission prevention or cleanup.
 
-Each region must decide whether to invest in economic growth, spend currency on pollution mitigation, or save for future decisions.
-
-The challenge is that development increases emissions, pollution spreads between regions, and excessive pollution in any region can cause the entire system to fail.
-
-I've tested different environment settings, pollution mechanics, and economic rewards to create a trade-off between development and sustainability.
-
-The next step is to compare local, global, and mixed rewards under the updated environment to see how agents balance economic growth with environmental constraints.
+The multi-pollutant model and a shared training workflow are implemented. Its parameters are exploratory and synthetic; the next step is to review and validate the fixed-policy behavior before retraining agents under local, global, and mixed rewards.
 
 ## Project Direction
 

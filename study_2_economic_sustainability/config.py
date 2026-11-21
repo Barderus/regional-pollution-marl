@@ -1,6 +1,7 @@
 class EnvironmentConfig:
     def __init__(self):
         self.regions = (0, 1, 2, 3)
+        self.edi_observation_boundaries = (34, 67)
         self.neighbors = {
             0: (1, 2),
             1: (0, 3),

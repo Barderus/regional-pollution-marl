@@ -1,7 +1,5 @@
 """Evaluate trained regional agents on held-out environment seeds."""
-
 from study_2_economic_sustainability.environment import EconomicSustainabilityEnvironment
-
 
 def run_episode(environment, agents, seed, action_modifier=None):
     observations = environment.reset(seed)
@@ -113,6 +111,7 @@ def evaluate_trained_policies(trained_policies, environment_config, evaluation_s
         environment = EconomicSustainabilityEnvironment(
             reward_mode,
             environment_config,
+            reward_formula="candidate",
         )
 
         for evaluation_seed in evaluation_seeds:

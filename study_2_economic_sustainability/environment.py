@@ -1,7 +1,6 @@
 """Four-region environment with separate air, water, soil, and noise stocks."""
 
 import random
-
 from study_2_economic_sustainability.config import EnvironmentConfig
 
 
@@ -33,11 +32,11 @@ def action_parts(action):
 
 
 def value_bin(value, boundaries):
-    if value < boundaries[0]:
-        return 0
-    if value < boundaries[1]:
-        return 1
-    return 2
+    for bin_index, boundary in enumerate(boundaries):
+        if value < boundary:
+            return bin_index
+
+    return len(boundaries)
 
 
 def development_gain(current_edi):
@@ -51,11 +50,14 @@ def development_gain(current_edi):
 
 
 class EconomicSustainabilityEnvironment:
-    def __init__(self, reward_mode="local", config=None):
+    def __init__(self, reward_mode="local", config=None, reward_formula="candidate"):
         if reward_mode not in ("local", "global", "mixed"):
             raise ValueError(f"Unknown reward mode: {reward_mode}")
+        if reward_formula not in ("original", "candidate"):
+            raise ValueError(f"Unknown reward formula: {reward_formula}")
 
         self.reward_mode = reward_mode
+        self.reward_formula = reward_formula
         self.config = config or EnvironmentConfig()
         self.rng = random.Random()
         self.currency_balances = ()
@@ -92,7 +94,10 @@ class EconomicSustainabilityEnvironment:
 
         for region in self.config.regions:
             observation = [
-                value_bin(self.development_indices[region], (34, 67)),
+                value_bin(
+                    self.development_indices[region],
+                    self.config.edi_observation_boundaries,
+                ),
                 value_bin(self.currency_balances[region], (200, 500)),
             ]
 
@@ -325,7 +330,18 @@ class EconomicSustainabilityEnvironment:
         self._update_indices()
 
         local_rewards = []
+        original_local_rewards = []
+        candidate_local_rewards = []
         pollution_damage = []
+        maximum_pollutant_pressure = []
+        reward_components = []
+        failed_regions = []
+
+        for region in config.regions:
+            for pollutant in config.pollutants:
+                load = self.pollutant_loads[pollutant][region]
+                if load >= config.pollution_limits[pollutant]:
+                    failed_regions.append((region, pollutant))
 
         for region in config.regions:
             damage = 0.0
@@ -341,14 +357,52 @@ class EconomicSustainabilityEnvironment:
             income_reward = (income[region] - config.income_base)
             income_reward /= config.ongoing_income_reward_scale
             economic_reward = development_gains[region] + income_reward
-            local_reward = config.economy_weight * economic_reward
-            local_reward -= config.pollution_weight * damage
+            original_reward = config.economy_weight * economic_reward
+            original_reward -= config.pollution_weight * damage
 
             if not valid_actions[region]:
-                local_reward -= config.invalid_action_penalty
+                original_reward -= config.invalid_action_penalty
 
-            local_rewards.append(local_reward)
+            pressure = max(
+                self.pollutant_loads[pollutant][region]
+                / config.pollution_limits[pollutant]
+                for pollutant in config.pollutants
+            )
+            failed = any(failed_region == region for failed_region, _ in failed_regions)
+            development_cost = development_costs_paid[region]
+            mitigation_cost = (
+                prevention_costs_paid[region] + cleanup_costs_paid[region]
+            )
+            candidate_reward = development_gains[region] / 10.0
+            candidate_reward += 0.75 * self.development_indices[region] / 100.0
+            candidate_reward += (income[region] - config.income_base) / 100.0
+            candidate_reward -= 2.0 * damage
+            candidate_reward -= 100.0 * max(0.0, pressure - 0.25) ** 2
+            candidate_reward -= 0.05 * development_cost / 100.0
+            candidate_reward -= 0.50 * mitigation_cost / 100.0
+            candidate_reward -= 10.0 * failed
+            candidate_reward -= 5.0 * (not valid_actions[region])
+
+            original_local_rewards.append(original_reward)
+            candidate_local_rewards.append(candidate_reward)
+            reward_components.append({
+                "development_gain": development_gains[region] / 10.0,
+                "edi_level": 0.75 * self.development_indices[region] / 100.0,
+                "income_increment": (income[region] - config.income_base) / 100.0,
+                "pollution_damage": -2.0 * damage,
+                "pressure_risk": -100.0 * max(0.0, pressure - 0.25) ** 2,
+                "development_cost": -0.05 * development_cost / 100.0,
+                "mitigation_cost": -0.50 * mitigation_cost / 100.0,
+                "regional_failure": -10.0 * failed,
+                "invalid_action": -5.0 * (not valid_actions[region]),
+            })
             pollution_damage.append(damage)
+            maximum_pollutant_pressure.append(pressure)
+
+        if self.reward_formula == "candidate":
+            local_rewards = candidate_local_rewards
+        else:
+            local_rewards = original_local_rewards
 
         global_reward = sum(local_rewards) / len(config.regions)
         mixed_rewards = []
@@ -363,14 +417,6 @@ class EconomicSustainabilityEnvironment:
             rewards = [global_reward] * len(config.regions)
         else:
             rewards = list(mixed_rewards)
-
-        failed_regions = []
-
-        for region in config.regions:
-            for pollutant in config.pollutants:
-                load = self.pollutant_loads[pollutant][region]
-                if load >= config.pollution_limits[pollutant]:
-                    failed_regions.append((region, pollutant))
 
         terminated = len(failed_regions) > 0
         self.step_count += 1
@@ -408,6 +454,11 @@ class EconomicSustainabilityEnvironment:
             "pollution_loads": self.pollution_loads,
             "global_pollution_index": self.global_pollution_index,
             "pollution_damage": tuple(pollution_damage),
+            "maximum_pollutant_pressure": tuple(maximum_pollutant_pressure),
+            "reward_formula": self.reward_formula,
+            "original_local_rewards": tuple(original_local_rewards),
+            "candidate_local_rewards": tuple(candidate_local_rewards),
+            "reward_components": tuple(reward_components),
             "failed_regions": tuple(failed_regions),
             "local_rewards": tuple(local_rewards),
             "global_reward": global_reward,

@@ -30,7 +30,6 @@ def train_episode(environment, agents, seed, reward_transform=None):
             )
 
         observations = next_observations
-
         if terminated or truncated:
             break
 
@@ -42,7 +41,7 @@ def train_agents(reward_mode, training_seed, environment_config=None, training_c
     if training_config is None:
         training_config = TrainingConfig()
 
-    environment = EconomicSustainabilityEnvironment(reward_mode, environment_config)
+    environment = EconomicSustainabilityEnvironment(reward_mode, environment_config, reward_formula="candidate")
     episode_seeds = random.Random(training_seed)
     agents = []
 
@@ -91,13 +90,7 @@ def save_q_tables(trained_policies, results_directory="results", notebook_number
         result_file.write("\n")
 
 
-def load_q_tables(
-    reward_modes,
-    training_seeds,
-    training_config=None,
-    results_directory="results",
-    notebook_number=3,
-):
+def load_q_tables(reward_modes, training_seeds, training_config=None, results_directory="results", notebook_number=3):
     if training_config is None:
         training_config = TrainingConfig()
 

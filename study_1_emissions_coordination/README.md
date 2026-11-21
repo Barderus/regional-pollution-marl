@@ -10,6 +10,12 @@ The simulation has four regions arranged in a square. Each region chooses low, m
 
 I trained independent tabular Q-learning agents with local, global, and mixed rewards. I compared them with random actions, fixed-medium mitigation, and simple threshold rules. The results use 20 training seeds, evaluated on the same 20 demand sequences. I report pollution and mitigation cost separately. Cost is a penalty in the simulation, not money.
 
+## Reward policies
+
+Local, global, and mixed describe the reward each learner receives, not different ways of selecting actions. In every condition, each region has its own Q-table and chooses low, medium, or high mitigation from its own demand category and pollution bin. Local reward scores that region's pollution and action cost. Global reward is the average of the four regions' local rewards, and every learner receives that same value. Mixed reward gives each learner 70% of its own local reward and 30% of the global average.
+
+During training, agents sometimes explore by choosing a random action; otherwise they choose the action with the best current Q-value. During evaluation, they choose the best-valued action without exploration. The random, fixed-medium, and threshold policies are hand-written baselines, not trained agents.
+
 ## Results
 
 With neighbor spillover set to 0.2, agents trained with a global reward averaged **24.97** regional pollution and **757** mitigation cost per episode. With a local reward, they averaged **26.18** pollution and **527** cost. Global rewards reduced pollution in 18 of 20 paired training runs, but cost more in all 20.
@@ -20,4 +26,4 @@ I also tried removing spillover and adding a reward term for reducing harm to ne
 
 ## Limitations
 
-The simulation uses arbitrary units, fixed assumptions, one four-region network, and limited information for each agent. It helps study how agents learn in this setting; it does not model real pollution or support policy decisions. Other network layouts and parameter values are still open questions. The notebooks and saved results are in `notebooks/` and `results/`.
+The study uses arbitrary units, fixed assumptions, one four-region square network, three mitigation actions, and 50-step episodes. Agents see only their own demand category and a coarse pollution bin; they do not see their neighbors' states or actions. The results cover the tested seeds and settings, not other network layouts, parameter values, algorithms, or real pollution systems. They do not support policy decisions. The notebooks and saved results are in `notebooks/` and `results/`.

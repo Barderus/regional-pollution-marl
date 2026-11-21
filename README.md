@@ -1,31 +1,21 @@
 # Regional Pollution MARL
 
-This project explores how independent agents make decisions when their actions affect other regions. I'm using Multi-Agent Reinforcement Learning (MARL) to study how agents balance their own interests with shared environmental challenges.
-
-The project is divided into two studies. Both use a simulated environment with four neighboring regions, but focus on different questions about decentralized decision-making.
+This project uses small synthetic simulations to explore how independent agents make decisions when one region's actions affect others. The model values are not calibrated to real economic or environmental data, so the results are not forecasts or policy recommendations.
 
 ## Study 1: Regional Emissions Coordination
 
-The [first study](study_1_emissions_coordination/README.md) focuses on how different reward structures influence pollution mitigation.
-
-Each region has an independent Q-learning agent that decides how much to reduce its emissions. I compare local, global, and mixed rewards to see how agents behave when prioritizing their own region versus the overall system.
-
-The initial results show that global rewards generally lead to lower pollution than local rewards, but with higher mitigation costs. Simpler strategies also performed well, raising questions about when reinforcement learning provides an advantage.
-
-The study also looks at how pollution spreading between neighboring regions affects agent behavior.
+[Study 1](study_1_emissions_coordination/README.md) compares Q-learning agents that choose low, medium, or high mitigation in a four-region network. It tests local, global, and mixed rewards, spillover, simple policies, and rewards for reducing harm to neighbors. The results describe the tested simulation settings and seeds.
 
 ## Study 2: Economic Development and Environmental Sustainability
 
-The [second study](study_2_economic_sustainability/README.md) adds economic development and environmental investment. The current design tracks air, water, soil, and noise pollution separately, with pollutant-specific transport and recovery. Regions can develop while investing in emission prevention or cleanup.
+[Study 2](study_2_economic_sustainability/README.md) adds regional currency and development, plus separate air, water, soil, and noise stocks. The experiments compare economic development with pollution prevention and cleanup. The candidate reward and refined EDI observations let the trained policies reach EDI 100 in most standard-emissions evaluations; a 20% emissions increase caused substantial soil failures, with the global-reward policies surviving most often.
 
-The multi-pollutant model and a shared training workflow are implemented. Its parameters are exploratory and synthetic; the next step is to review and validate the fixed-policy behavior before retraining agents under local, global, and mixed rewards.
+Study 2 includes equation and fixed-policy feasibility screens, a decentralized baseline, reward tests, and evaluations of saved Q-learning policies. See its [README](study_2_economic_sustainability/README.md) for the results by experiment and for the distinctions between saved model versions.
 
-## Project Direction
+## Project files
 
-Both studies are part of my interest in decentralized multi-agent decision-making, especially how agents balance individual and shared objectives.
+- [Methodology and tools](METHODOLOGY_AND_TOOLS.md): model equations, assumptions, experiment design, and findings for both studies.
+- `study_1_emissions_coordination/`: Study 1 code, notebooks, and results.
+- `study_2_economic_sustainability/`: Study 2 source code, notebooks, Q-tables, and results.
 
-As I continue working on this project, I want to explore how different reward structures, environmental conditions, and coordination strategies affect the decisions agents make.
-
-The goal is to better understand when independent agents can learn to make decisions that benefit both themselves and the larger system.
-
-These are synthetic simulations designed to study agent behavior, not predict real-world environmental or economic outcomes.
+The units and coefficients are stylized assumptions. Interpret each result with the settings saved alongside its data, and only within that experiment's model version.

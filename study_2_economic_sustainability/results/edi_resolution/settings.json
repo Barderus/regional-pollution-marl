@@ -1,0 +1,350 @@
+{
+  "reward_formula": "candidate",
+  "baseline_edi_observation_boundaries": [
+    34,
+    67
+  ],
+  "refined_edi_observation_boundaries": [
+    34,
+    67,
+    70,
+    80,
+    90,
+    100
+  ],
+  "baseline_environment": {
+    "regions": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "edi_observation_boundaries": [
+      34,
+      67
+    ],
+    "neighbors": {
+      "0": [
+        1,
+        2
+      ],
+      "1": [
+        0,
+        3
+      ],
+      "2": [
+        0,
+        3
+      ],
+      "3": [
+        1,
+        2
+      ]
+    },
+    "time_step_name": "year",
+    "episode_steps": 200,
+    "pollutants": [
+      "air",
+      "water",
+      "soil",
+      "noise"
+    ],
+    "pollutant_weights": {
+      "air": 0.35,
+      "water": 0.3,
+      "soil": 0.25,
+      "noise": 0.1
+    },
+    "baseline_emissions": {
+      "air": 3.0,
+      "water": 1.0,
+      "soil": 0.5,
+      "noise": 2.0
+    },
+    "edi_emissions_per_point": {
+      "air": 0.08,
+      "water": 0.04,
+      "soil": 0.02,
+      "noise": 0.03
+    },
+    "transport_fractions": {
+      "air": 0.3,
+      "water": 0.4,
+      "soil": 0.1,
+      "noise": 0.2
+    },
+    "natural_recovery_rates": {
+      "air": 0.6,
+      "water": 0.12,
+      "soil": 0.02,
+      "noise": 0.9
+    },
+    "recovery_degradation": {
+      "air": 0.25,
+      "water": 0.7,
+      "soil": 0.8,
+      "noise": 0.0
+    },
+    "minimum_recovery_fraction": 0.2,
+    "pollution_limits": {
+      "air": 100.0,
+      "water": 100.0,
+      "soil": 100.0,
+      "noise": 100.0
+    },
+    "initial_pollution": {
+      "air": 10.0,
+      "water": 10.0,
+      "soil": 10.0,
+      "noise": 10.0
+    },
+    "development_cost": 100.0,
+    "initial_currency_minimum": 100,
+    "initial_currency_maximum": 1000,
+    "income_base": 20.0,
+    "income_per_edi": 0.5,
+    "prevention_fractions": [
+      0.0,
+      0.25,
+      0.5,
+      0.75
+    ],
+    "cleanup_capacities": [
+      0.0,
+      2.0,
+      5.0,
+      10.0
+    ],
+    "prevention_costs": [
+      0.0,
+      10.0,
+      25.0,
+      50.0
+    ],
+    "cleanup_costs": [
+      0.0,
+      15.0,
+      40.0,
+      80.0
+    ],
+    "cleanup_difficulty": {
+      "air": 0.0,
+      "water": 0.5,
+      "soil": 0.65,
+      "noise": 0.0
+    },
+    "minimum_cleanup_efficiency": 0.15,
+    "gpi_scale": 100.0,
+    "damage_threshold_fraction": 0.5,
+    "failure_penalty": 100.0,
+    "invalid_action_penalty": 10.0,
+    "ongoing_income_reward_scale": 10.0,
+    "economy_weight": 1.0,
+    "pollution_weight": 1.0
+  },
+  "refined_environment": {
+    "regions": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "edi_observation_boundaries": [
+      34,
+      67,
+      70,
+      80,
+      90,
+      100
+    ],
+    "neighbors": {
+      "0": [
+        1,
+        2
+      ],
+      "1": [
+        0,
+        3
+      ],
+      "2": [
+        0,
+        3
+      ],
+      "3": [
+        1,
+        2
+      ]
+    },
+    "time_step_name": "year",
+    "episode_steps": 200,
+    "pollutants": [
+      "air",
+      "water",
+      "soil",
+      "noise"
+    ],
+    "pollutant_weights": {
+      "air": 0.35,
+      "water": 0.3,
+      "soil": 0.25,
+      "noise": 0.1
+    },
+    "baseline_emissions": {
+      "air": 3.0,
+      "water": 1.0,
+      "soil": 0.5,
+      "noise": 2.0
+    },
+    "edi_emissions_per_point": {
+      "air": 0.08,
+      "water": 0.04,
+      "soil": 0.02,
+      "noise": 0.03
+    },
+    "transport_fractions": {
+      "air": 0.3,
+      "water": 0.4,
+      "soil": 0.1,
+      "noise": 0.2
+    },
+    "natural_recovery_rates": {
+      "air": 0.6,
+      "water": 0.12,
+      "soil": 0.02,
+      "noise": 0.9
+    },
+    "recovery_degradation": {
+      "air": 0.25,
+      "water": 0.7,
+      "soil": 0.8,
+      "noise": 0.0
+    },
+    "minimum_recovery_fraction": 0.2,
+    "pollution_limits": {
+      "air": 100.0,
+      "water": 100.0,
+      "soil": 100.0,
+      "noise": 100.0
+    },
+    "initial_pollution": {
+      "air": 10.0,
+      "water": 10.0,
+      "soil": 10.0,
+      "noise": 10.0
+    },
+    "development_cost": 100.0,
+    "initial_currency_minimum": 100,
+    "initial_currency_maximum": 1000,
+    "income_base": 20.0,
+    "income_per_edi": 0.5,
+    "prevention_fractions": [
+      0.0,
+      0.25,
+      0.5,
+      0.75
+    ],
+    "cleanup_capacities": [
+      0.0,
+      2.0,
+      5.0,
+      10.0
+    ],
+    "prevention_costs": [
+      0.0,
+      10.0,
+      25.0,
+      50.0
+    ],
+    "cleanup_costs": [
+      0.0,
+      15.0,
+      40.0,
+      80.0
+    ],
+    "cleanup_difficulty": {
+      "air": 0.0,
+      "water": 0.5,
+      "soil": 0.65,
+      "noise": 0.0
+    },
+    "minimum_cleanup_efficiency": 0.15,
+    "gpi_scale": 100.0,
+    "damage_threshold_fraction": 0.5,
+    "failure_penalty": 100.0,
+    "invalid_action_penalty": 10.0,
+    "ongoing_income_reward_scale": 10.0,
+    "economy_weight": 1.0,
+    "pollution_weight": 1.0
+  },
+  "training": {
+    "learning_rate": 0.1,
+    "discount_factor": 0.95,
+    "epsilon_start": 1.0,
+    "epsilon_decay": 0.995,
+    "epsilon_minimum": 0.05,
+    "training_episodes": 2000,
+    "training_seeds": [
+      11,
+      23,
+      37,
+      41,
+      53
+    ],
+    "evaluation_seeds": [
+      200000,
+      200001,
+      200002,
+      200003,
+      200004,
+      200005,
+      200006,
+      200007,
+      200008,
+      200009,
+      200010,
+      200011,
+      200012,
+      200013,
+      200014,
+      200015,
+      200016,
+      200017,
+      200018,
+      200019
+    ]
+  },
+  "reward_modes": [
+    "local",
+    "global",
+    "mixed"
+  ],
+  "training_seeds": [
+    11,
+    23,
+    37,
+    41,
+    53
+  ],
+  "evaluation_seeds": [
+    200000,
+    200001,
+    200002,
+    200003,
+    200004,
+    200005,
+    200006,
+    200007,
+    200008,
+    200009,
+    200010,
+    200011,
+    200012,
+    200013,
+    200014,
+    200015,
+    200016,
+    200017,
+    200018,
+    200019
+  ]
+}

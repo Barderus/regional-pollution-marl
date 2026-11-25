@@ -1,315 +1,166 @@
-"""Pollutant stock accounting for Study 3's first model stage."""
-
+"""Annual environmental dynamics for Study 3, without policy actions or rewards."""
 import random
-import math
 
-
-# Joos et al. (2013) multi-model mean CO2 impulse response coefficients.
-CO2_RESPONSE_COMPONENTS = (
-    (0.2173, None),
-    (0.2240, 394.4),
-    (0.2824, 36.54),
-    (0.2763, 4.304),
-)
-
+from study_3_pollutant_dynamics.pollutant_models import (co2_concentration, lead_annual_step, nitrate_annual_step, pm25_exposure)
 
 class PollutantDynamicsEnvironment:
     def __init__(self, config):
         self.config = config
-        self.action_names = ("none",) + tuple(config.interventions)
+        self.action_names = ("none",)
         self.rng = random.Random()
-        self.stocks = {}
-        self.immobilized_stocks = {}
-        self.global_emission_cohorts = []
         self.step_count = 0
         self.started = False
         self.done = False
+        self.stocks = {}
+        self.mobile_stocks = {}
+        self.co2_emission_cohorts = []
+
+    def _regional_lead_mobile_fraction(self, region):
+        mobile_fraction = self.config.lead["mobile_fraction"]
+
+        if isinstance(mobile_fraction, (list, tuple)):
+            return mobile_fraction[region]
+
+        return mobile_fraction
 
     def reset(self, seed=0):
         self.rng.seed(seed)
-        self.stocks = {}
-
-        for pollutant in self.config.local_pollutants:
-            initial_values = self.config.initial_stocks[pollutant]
-            self.stocks[pollutant] = tuple(initial_values)
-            self.immobilized_stocks[pollutant] = tuple(
-                self.config.initial_immobilized_stocks[pollutant]
-            )
-
-        initial_global_stock = float(
-            self.config.initial_stocks[self.config.global_pollutant]
-        )
-        self.global_emission_cohorts = [(0, initial_global_stock)]
-        self.stocks[self.config.global_pollutant] = initial_global_stock
         self.step_count = 0
-        self.started = True
         self.done = False
+        self.started = True
+        self.co2_emission_cohorts = []
+
+        nitrate_stocks = []
+        lead_stocks = []
+        lead_mobile_stocks = []
+
+        for region in range(len(self.config.regions)):
+            nitrate_stocks.append(self.config.nitrate["initial_stock_kg_n"][region])
+            lead_stock = self.config.lead["initial_stock_kg_pb"][region]
+            lead_stocks.append(lead_stock)
+            lead_mobile_stocks.append(lead_stock * self._regional_lead_mobile_fraction(region))
+
+        self.stocks = {"PM2.5": tuple(self.config.pm25["baseline_exposure_ug_m3"]),
+                       "CO2": self.config.co2["initial_concentration_ppm"], "Nitrate-N": tuple(nitrate_stocks),
+                       "Lead": tuple(lead_stocks)
+                       }
+
+        self.mobile_stocks = {"Nitrate-N": tuple(nitrate_stocks), "Lead": tuple(lead_mobile_stocks)}
 
         return self._observations()
 
     def _observations(self):
         observations = []
 
-        for region in self.config.regions:
-            region_state = {}
-
-            for pollutant in self.config.local_pollutants:
-                region_state[pollutant] = self.stocks[pollutant][region]
-                region_state[f"{pollutant}_mobile"] = (
-                    self.stocks[pollutant][region]
-                    - self.immobilized_stocks[pollutant][region]
-                )
-
-            region_state[self.config.global_pollutant] = self.stocks[
-                self.config.global_pollutant
-            ]
-            observations.append(region_state)
+        for region in range(len(self.config.regions)):
+            nitrate_concentration = (1000 * self.stocks["Nitrate-N"][region] / self.config.nitrate["water_volume_m3"])
+            observation = {"PM2.5_ug_m3": self.stocks["PM2.5"][region], "CO2_ppm": self.stocks["CO2"],
+                           "Nitrate-N_mg_L": nitrate_concentration, "Nitrate-N_stock_kg": self.stocks["Nitrate-N"][region],
+                           "Lead_total_kg": self.stocks["Lead"][region], "Lead_mobile_kg": self.mobile_stocks["Lead"][region]}
+            observations.append(observation)
 
         return tuple(observations)
-
-    def _co2_response_fraction(self, age_years):
-        remaining_fraction = 0.0
-
-        for coefficient, time_constant in CO2_RESPONSE_COMPONENTS:
-            if time_constant is None:
-                remaining_fraction += coefficient
-            else:
-                remaining_fraction += coefficient * math.exp(
-                    -age_years / time_constant
-                )
-
-        return remaining_fraction
-
-    def _global_stock_from_cohorts(self, cohorts):
-        stock = 0.0
-
-        for age_years, mass in cohorts:
-            stock += mass * self._co2_response_fraction(age_years)
-
-        return stock
-
-    def _intervention(self, action):
-        if action is None or action == "none":
-            return {
-                "prevention_fraction": {},
-                "cleanup_capacity": {},
-                "immobilization_fraction": {},
-                "global_removal": 0.0,
-            }
-
-        if action not in self.config.interventions:
-            raise ValueError(f"Unknown intervention: {action}")
-
-        return self.config.interventions[action]
 
     def decode_actions(self, action_indices):
         decoded_actions = []
 
         for action_index in action_indices:
-            if type(action_index) is not int:
-                raise ValueError("Action indices must be integers")
-
-            if action_index < 0 or action_index >= len(self.action_names):
-                raise ValueError("Action index is outside the configured action list")
-
-            decoded_actions.append(self.action_names[action_index])
+            if type(action_index) is not int or action_index != 0:
+                raise ValueError("The pollutant dynamics stage only supports the no-op action")
+            decoded_actions.append("none")
 
         return decoded_actions
 
-    def step(self, regional_actions):
+    def _check_actions(self, regional_actions):
+        if regional_actions is None:
+            return
+
+        if not isinstance(regional_actions, (list, tuple)):
+            raise ValueError("regional_actions must be a list or tuple of no-op actions")
+
+        if len(regional_actions) != len(self.config.regions):
+            raise ValueError("Provide one no-op action per region")
+
+        for action in regional_actions:
+            if action not in (None, "none", 0):
+                raise ValueError("Policy actions are not part of the pollutant dynamics stage")
+
+    def step(self, regional_actions=None):
         if not self.started or self.done:
             raise RuntimeError("Reset the environment before stepping")
 
-        if not isinstance(regional_actions, (list, tuple)):
-            raise ValueError("regional_actions must be a list or tuple")
+        self._check_actions(regional_actions)
 
-        if len(regional_actions) != len(self.config.regions):
-            raise ValueError("Provide one intervention name per region")
+        pm25_exposure_values = pm25_exposure(self.config.pm25["baseline_exposure_ug_m3"],
+                                             self.config.pm25["annual_emission_change_tons"],
+                                             self.config.pm25["transfer_ug_m3_per_1000_tons"],
+                                             self.config.pm25["cross_region_share"]
+                                             )
+        co2_deviation_gtco2 = 0.0
+        for region in range(len(self.config.regions)):
+            co2_deviation_gtco2 += (self.config.co2["annual_emissions_gtco2_year"][region]
+                                    - self.config.co2["reference_emissions_gtco2_year"][region])
 
-        interventions = []
+        aging_cohorts = []
+        for age_years, mass_gtco2 in self.co2_emission_cohorts:
+            aging_cohorts.append((age_years + 1, mass_gtco2))
+        aging_cohorts.append((0, co2_deviation_gtco2))
 
-        for action in regional_actions:
-            interventions.append(self._intervention(action))
+        self.co2_emission_cohorts = aging_cohorts
+        next_year = self.step_count + 1
+        co2_ppm = co2_concentration(self.config.co2["initial_concentration_ppm"], self.config.co2["background_growth_ppm_year"],
+                                    next_year, self.co2_emission_cohorts, self.config.co2["ppm_per_gtco2"])
 
-        emissions_after_prevention = {}
+        next_nitrate_stocks = []
+        nitrate_flows = []
+        next_nitrate_mobile = []
+        next_lead_stocks = []
+        next_lead_mobile = []
+        lead_flows = []
 
-        for pollutant in self.config.local_pollutants:
-            emissions_after_prevention[pollutant] = []
+        for region in range(len(self.config.regions)):
+            nitrate_result = nitrate_annual_step(self.stocks["Nitrate-N"][region], self.config.nitrate["annual_discharge_m3"],
+                                                 self.config.nitrate["water_volume_m3"],
+                                                 self.config.nitrate["annual_input_kg_n"][region],
+                                                 self.config.nitrate["denitrification_rate_per_year"])
 
-            for region in self.config.regions:
-                gross_emissions = self.config.annual_emissions[pollutant][region]
-                prevention_fraction = interventions[region][
-                    "prevention_fraction"
-                ].get(pollutant, 0.0)
-                prevention_fraction = min(max(prevention_fraction, 0.0), 1.0)
-                emissions_after_prevention[pollutant].append(
-                    gross_emissions * (1.0 - prevention_fraction)
-                )
+            next_nitrate_stocks.append(nitrate_result["stock_kg_n"])
+            next_nitrate_mobile.append(nitrate_result["stock_kg_n"])
+            nitrate_flows.append(nitrate_result)
 
-        global_pollutant = self.config.global_pollutant
-        global_emissions = sum(self.config.annual_emissions[global_pollutant])
-        global_prevention_fraction = 0.0
+            lead_result = lead_annual_step(self.stocks["Lead"][region], self.config.lead["annual_input_kg_pb"][region],
+                                           self._regional_lead_mobile_fraction(region),
+                                           self.config.lead["annual_mobile_export_fraction"])
 
-        for region, intervention in enumerate(interventions):
-            prevention = intervention["prevention_fraction"]
-            regional_fraction = prevention.get(global_pollutant, 0.0)
-            regional_emissions = self.config.annual_emissions[global_pollutant][region]
-            global_prevention_fraction += regional_emissions * regional_fraction
+            next_lead_stocks.append(lead_result["total_stock_kg_pb"])
+            next_lead_mobile.append(lead_result["mobile_stock_kg_pb"])
+            lead_flows.append(lead_result)
 
-        if global_emissions > 0:
-            global_prevention_fraction /= global_emissions
+        self.stocks = {"PM2.5": pm25_exposure_values, "CO2": co2_ppm, "Nitrate-N": tuple(next_nitrate_stocks),
+                       "Lead": tuple(next_lead_stocks)}
 
-        global_emissions_after_prevention = global_emissions * (
-            1.0 - min(global_prevention_fraction, 1.0)
-        )
+        self.mobile_stocks = {"Nitrate-N": tuple(next_nitrate_mobile), "Lead": tuple(next_lead_mobile)}
 
-        natural_removal = {}
-        incoming_transport = {}
-        outgoing_transport = {}
-        cleanup_removed = {}
-        next_stocks = {}
-        next_immobilized_stocks = {}
-        mobile_stocks = {}
-        immobilized_this_step = {}
-
-        for pollutant in self.config.local_pollutants:
-            old_stocks = self.stocks[pollutant]
-            old_immobilized = self.immobilized_stocks[pollutant]
-            natural_fraction = self.config.natural_removal_fraction[pollutant]
-            after_natural_removal = []
-            total_after_natural_removal = []
-            natural_removal[pollutant] = []
-
-            for region, stock in enumerate(old_stocks):
-                emitted = emissions_after_prevention[pollutant][region]
-                mobile_stock = stock - old_immobilized[region]
-                mobile_stock += emitted * self.config.emission_mobile_fraction[pollutant]
-                total_stock = stock + emitted
-                removed = mobile_stock * natural_fraction
-                natural_removal[pollutant].append(removed)
-                total_after_natural_removal.append(total_stock - removed)
-                after_natural_removal.append(mobile_stock - removed)
-
-            matrix = self.config.transport_matrix[pollutant]
-            outgoing = []
-            incoming = [0.0] * len(self.config.regions)
-
-            for source_region, source_stock in enumerate(after_natural_removal):
-                total_outgoing = source_stock * sum(matrix[source_region])
-                outgoing.append(total_outgoing)
-
-                for destination_region, fraction in enumerate(matrix[source_region]):
-                    incoming[destination_region] += source_stock * fraction
-
-            outgoing_transport[pollutant] = tuple(outgoing)
-            incoming_transport[pollutant] = tuple(incoming)
-            cleanup_removed[pollutant] = []
-            pollutant_next_stocks = []
-            pollutant_next_immobilized = []
-            pollutant_mobile_stocks = []
-            immobilized_this_step[pollutant] = []
-
-            for region in self.config.regions:
-                local_after_transport = after_natural_removal[region]
-                local_after_transport -= outgoing[region]
-                local_after_transport += incoming[region]
-                total_after_transport = total_after_natural_removal[region]
-                total_after_transport -= outgoing[region]
-                total_after_transport += incoming[region]
-                cleanup_capacity = interventions[region]["cleanup_capacity"].get(
-                    pollutant, 0.0
-                )
-
-                removed_by_cleanup = min(local_after_transport, cleanup_capacity)
-                cleanup_removed[pollutant].append(removed_by_cleanup)
-                mobile_after_cleanup = local_after_transport - removed_by_cleanup
-                total_after_cleanup = total_after_transport - removed_by_cleanup
-                immobilization_fraction = interventions[region][
-                    "immobilization_fraction"
-                ].get(pollutant, 0.0)
-                newly_immobilized = mobile_after_cleanup * immobilization_fraction
-                pollutant_next_immobilized.append(
-                    old_immobilized[region] + newly_immobilized
-                )
-                immobilized_this_step[pollutant].append(newly_immobilized)
-                pollutant_mobile_stocks.append(mobile_after_cleanup - newly_immobilized)
-                pollutant_next_stocks.append(total_after_cleanup)
-
-            next_stocks[pollutant] = tuple(pollutant_next_stocks)
-            next_immobilized_stocks[pollutant] = tuple(pollutant_next_immobilized)
-            mobile_stocks[pollutant] = tuple(pollutant_mobile_stocks)
-
-        old_global_stock = self.stocks[global_pollutant]
-        next_global_cohorts = []
-
-        for age_years, mass in self.global_emission_cohorts:
-            next_global_cohorts.append((age_years + 1, mass))
-
-        next_global_cohorts.append((0, global_emissions_after_prevention))
-        global_stock_before_removal_action = self._global_stock_from_cohorts(
-            next_global_cohorts
-        )
-        global_natural_removal = (
-            old_global_stock
-            + global_emissions_after_prevention
-            - global_stock_before_removal_action
-        )
-        global_cleanup_capacity = 0.0
-
-        for intervention in interventions:
-            global_cleanup_capacity += intervention["global_removal"]
-
-        global_cleanup_removed = min(
-            max(0.0, global_stock_before_removal_action),
-            global_cleanup_capacity,
-        )
-
-        if global_cleanup_removed > 0:
-            next_global_cohorts.append((0, -global_cleanup_removed))
-
-        self.global_emission_cohorts = next_global_cohorts
-        next_stocks[global_pollutant] = self._global_stock_from_cohorts(
-            next_global_cohorts
-        )
-        natural_removal[global_pollutant] = global_natural_removal
-        cleanup_removed[global_pollutant] = global_cleanup_removed
-        incoming_transport[global_pollutant] = 0.0
-        outgoing_transport[global_pollutant] = 0.0
-
-        self.stocks = next_stocks
-        self.immobilized_stocks = next_immobilized_stocks
-        self.step_count += 1
-        failed_pollutants = []
-
-        for pollutant in self.config.local_pollutants:
-            threshold = self.config.failure_thresholds[pollutant]
-
-            for region, stock in enumerate(mobile_stocks[pollutant]):
-                if stock >= threshold:
-                    failed_pollutants.append((region, pollutant))
-
-        if self.stocks[global_pollutant] >= self.config.failure_thresholds[global_pollutant]:
-            failed_pollutants.append(("global", global_pollutant))
-
-        terminated = len(failed_pollutants) > 0
-        truncated = self.step_count >= self.config.episode_steps and not terminated
+        self.step_count = next_year
+        truncated = self.step_count >= self.config.episode_steps
+        terminated = False
         self.done = terminated or truncated
 
         info = {
             "step": self.step_count,
             "time_step_name": self.config.time_step_name,
-            "gross_emissions": self.config.annual_emissions,
-            "emissions_after_prevention": emissions_after_prevention,
-            "global_emissions_after_prevention": global_emissions_after_prevention,
-            "natural_removal": natural_removal,
-            "incoming_transport": incoming_transport,
-            "outgoing_transport": outgoing_transport,
-            "cleanup_removed": cleanup_removed,
             "stocks": self.stocks,
-            "mobile_stocks": mobile_stocks,
-            "immobilized_stocks": self.immobilized_stocks,
-            "immobilized_this_step": immobilized_this_step,
-            "failed_pollutants": tuple(failed_pollutants),
+            "mobile_stocks": self.mobile_stocks,
+            "gross_emissions": {
+                "PM2.5_change_tons": self.config.pm25["annual_emission_change_tons"],
+                "CO2_gtco2_year": self.config.co2["annual_emissions_gtco2_year"],
+                "Nitrate-N_kg_year": self.config.nitrate["annual_input_kg_n"],
+                "Lead_kg_year": self.config.lead["annual_input_kg_pb"],
+            },
+            "co2_emission_deviation_gtco2": co2_deviation_gtco2,
+            "nitrate_flows": tuple(nitrate_flows),
+            "lead_flows": tuple(lead_flows),
+            "failed_pollutants": (),
         }
 
         return self._observations(), terminated, truncated, info

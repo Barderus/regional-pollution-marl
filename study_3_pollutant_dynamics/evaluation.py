@@ -1,5 +1,4 @@
-"""Episode evaluation helpers for Study 3 pollutant dynamics."""
-
+"""Episode summaries for pollutant-only Study 3 simulations."""
 
 def run_fixed_policy_episode(environment, policy, seed):
     observations = environment.reset(seed)
@@ -9,46 +8,56 @@ def run_fixed_policy_episode(environment, policy, seed):
 
     while not terminated and not truncated:
         actions = policy(observations, environment)
-        next_observations, terminated, truncated, info = environment.step(actions)
+        observations, terminated, truncated, info = environment.step(actions)
         trajectory.append(info)
-        observations = next_observations
 
     return trajectory, terminated, truncated
 
 
 def summarize_trajectory(trajectory, config, terminated, truncated):
+    if not trajectory:
+        raise ValueError("Cannot summarize an empty trajectory")
+
     final_info = trajectory[-1]
-    summary = {
-        "steps": len(trajectory),
-        "failure": terminated,
-        "completed_horizon": truncated,
-        "failed_pollutants": final_info["failed_pollutants"],
-    }
+    summary = {"steps": len(trajectory), "terminated": terminated, "completed_horizon": truncated,
+               "failed_pollutants": final_info["failed_pollutants"]}
 
     for pollutant in config.pollutants:
-        stock_history = []
-        mobile_stock_history = []
-
+        values = []
         for step_info in trajectory:
             stock = step_info["stocks"][pollutant]
-            mobile_stock = step_info["mobile_stocks"].get(pollutant, stock)
-
-            if pollutant == config.global_pollutant:
-                stock_history.append(stock)
-                mobile_stock_history.append(stock)
+            if isinstance(stock, tuple):
+                values.extend(stock)
             else:
-                stock_history.extend(stock)
-                mobile_stock_history.extend(mobile_stock)
+                values.append(stock)
 
-        summary[f"mean_{pollutant}_stock"] = sum(stock_history) / len(stock_history)
-        summary[f"peak_{pollutant}_stock"] = max(stock_history)
-        summary[f"final_{pollutant}_stock"] = final_info["stocks"][pollutant]
-        summary[f"mean_{pollutant}_mobile_stock"] = (
-            sum(mobile_stock_history) / len(mobile_stock_history)
-        )
-        summary[f"peak_{pollutant}_mobile_stock"] = max(mobile_stock_history)
-        summary[f"final_{pollutant}_mobile_stock"] = final_info[
-            "mobile_stocks"
-        ].get(pollutant, final_info["stocks"][pollutant])
+        if pollutant == "PM2.5":
+            summary["mean_PM2.5_exposure_ug_m3"] = sum(values) / len(values)
+            summary["peak_PM2.5_exposure_ug_m3"] = max(values)
+            summary["final_PM2.5_exposure_ug_m3"] = final_info["stocks"][pollutant]
+        elif pollutant == "CO2":
+            summary["mean_CO2_ppm"] = sum(values) / len(values)
+            summary["peak_CO2_ppm"] = max(values)
+            summary["final_CO2_ppm"] = final_info["stocks"][pollutant]
+        elif pollutant == "Nitrate-N":
+            summary["mean_Nitrate-N_stock_kg"] = sum(values) / len(values)
+            summary["peak_Nitrate-N_stock_kg"] = max(values)
+            final_stocks = final_info["stocks"][pollutant]
+            summary["final_Nitrate-N_stock_kg"] = sum(final_stocks) / len(final_stocks)
+            concentrations = []
+            for stock in final_stocks:
+                concentrations.append(1000 * stock / config.nitrate["water_volume_m3"])
+            summary["final_Nitrate-N_mean_mg_L"] = sum(concentrations) / len(concentrations)
+        elif pollutant == "Lead":
+            summary["mean_Lead_total_stock_kg"] = sum(values) / len(values)
+            summary["peak_Lead_total_stock_kg"] = max(values)
+            final_stocks = final_info["stocks"][pollutant]
+            summary["final_Lead_total_stock_kg"] = sum(final_stocks) / len(final_stocks)
+            mobile_values = []
+            for step_info in trajectory:
+                mobile_values.extend(step_info["mobile_stocks"][pollutant])
+            summary["mean_Lead_mobile_stock_kg"] = sum(mobile_values) / len(mobile_values)
+            final_mobile = final_info["mobile_stocks"][pollutant]
+            summary["final_Lead_mobile_stock_kg"] = sum(final_mobile) / len(final_mobile)
 
     return summary

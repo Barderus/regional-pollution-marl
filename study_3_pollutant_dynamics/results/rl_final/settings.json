@@ -1,0 +1,35 @@
+{
+  "training_scenarios": "uniform episode sampling across low, reference, high",
+  "evaluation_scenarios": [
+    "low",
+    "reference",
+    "high"
+  ],
+  "reward_modes": [
+    "local",
+    "global",
+    "mixed"
+  ],
+  "training_seeds": [
+    11,
+    23,
+    37
+  ],
+  "episode_checkpoints": [
+    300,
+    1000,
+    3000
+  ],
+  "episode_years": 40,
+  "income_retention_fraction": 0.6,
+  "development_cost_shape": "constant",
+  "epsilon_start": 1.0,
+  "epsilon_decay": 0.9990019209880034,
+  "epsilon_minimum": 0.05,
+  "learning_rate": 0.2,
+  "discount_factor": 0.95,
+  "unseen_action_rules": [
+    "default_greedy_tie",
+    "develop_balanced"
+  ]
+}

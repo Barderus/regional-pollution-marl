@@ -1,0 +1,77 @@
+{
+  "retention_fraction": 0.6,
+  "development_cost_shape": "constant",
+  "development_cost_per_EDI_point": 25.0,
+  "episode_years": 40,
+  "training_seeds": [
+    11,
+    23,
+    37
+  ],
+  "training_episodes_per_seed": 300,
+  "reward_modes": [
+    "local",
+    "global",
+    "mixed"
+  ],
+  "action_names": [
+    "maintain",
+    "develop",
+    "prevention",
+    "develop_prevention",
+    "cleanup",
+    "develop_cleanup",
+    "balanced",
+    "develop_balanced"
+  ],
+  "state_bin_edges": {
+    "EDI": [
+      60,
+      70,
+      80,
+      90,
+      95,
+      98
+    ],
+    "currency": [
+      100,
+      300,
+      600,
+      1200,
+      2400
+    ],
+    "PM2.5_ug_m3": [
+      9,
+      15
+    ],
+    "CO2_ppm": [
+      450,
+      500,
+      550
+    ],
+    "Nitrate-N_mg_L": [
+      5,
+      10
+    ],
+    "Lead_total_kg": [
+      15,
+      25
+    ],
+    "Lead_mobile_kg": [
+      0.005,
+      0.02
+    ],
+    "year": [
+      10,
+      20,
+      30
+    ]
+  },
+  "pollution_weight": 1.0,
+  "learning_rate_start": 0.2,
+  "learning_rate_schedule": "initial / sqrt(state-action visits)",
+  "discount_factor": 0.95,
+  "epsilon_start": 1.0,
+  "epsilon_decay": 0.99,
+  "epsilon_minimum": 0.05
+}

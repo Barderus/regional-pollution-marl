@@ -1,6 +1,7 @@
 """Tabular Q-learning agent used after the environment is calibrated."""
 
 import random
+import math
 
 
 class TabularQLearner:
@@ -12,6 +13,7 @@ class TabularQLearner:
         self.epsilon = epsilon
         self.rng = random.Random(seed)
         self.q_values = {}
+        self.action_visits = {}
 
     def _state_values(self, state):
         if state not in self.q_values:
@@ -23,7 +25,7 @@ class TabularQLearner:
         if not greedy and self.rng.random() < self.epsilon:
             return self.rng.randrange(self.action_count)
 
-        values = self._state_values(state)
+        values = self.q_values.get(state, [0.0] * self.action_count)
         best_action = 0
 
         for action in range(1, self.action_count):
@@ -34,6 +36,10 @@ class TabularQLearner:
 
     def update(self, state, action, reward, next_state, terminal):
         values = self._state_values(state)
+        state_action = (state, action)
+        visits = self.action_visits.get(state_action, 0) + 1
+        self.action_visits[state_action] = visits
+        learning_rate = self.learning_rate / math.sqrt(visits)
 
         if terminal:
             target = reward
@@ -42,7 +48,7 @@ class TabularQLearner:
                 self._state_values(next_state)
             )
 
-        values[action] += self.learning_rate * (target - values[action])
+        values[action] += learning_rate * (target - values[action])
 
     def decay_epsilon(self, decay_rate, minimum):
         self.epsilon = max(minimum, self.epsilon * decay_rate)

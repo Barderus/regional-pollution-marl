@@ -145,6 +145,7 @@ class Study3IntegratedEnvironment:
             observation["EDI"] = self.edi[region_index]
             observation["currency"] = self.currency[region_index]
             observation["region_index"] = region_index
+            observation["year"] = self.step_count
             observations.append(observation)
 
         return tuple(observations)

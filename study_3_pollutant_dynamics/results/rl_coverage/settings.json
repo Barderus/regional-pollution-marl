@@ -1,0 +1,79 @@
+{
+  "training_scenarios": [
+    "low",
+    "reference",
+    "high"
+  ],
+  "evaluation_scenarios": [
+    "low",
+    "reference",
+    "high"
+  ],
+  "reward_modes": [
+    "local",
+    "global",
+    "mixed"
+  ],
+  "training_seeds": [
+    11,
+    23,
+    37
+  ],
+  "episode_checkpoints": [
+    300,
+    1000,
+    3000
+  ],
+  "episode_years": 40,
+  "income_retention_fraction": 0.6,
+  "starting_currency_multiplier": 1.0,
+  "development_cost_shape": "constant",
+  "encoding": {
+    "EDI": [
+      60,
+      70,
+      80,
+      90,
+      95,
+      98
+    ],
+    "currency": [
+      100,
+      300,
+      600,
+      1200,
+      2400
+    ],
+    "PM2.5_ug_m3": [
+      9,
+      15
+    ],
+    "CO2_ppm": [
+      450,
+      500,
+      550
+    ],
+    "Nitrate-N_mg_L": [
+      5,
+      10
+    ],
+    "Lead_total_kg": [
+      15,
+      25
+    ],
+    "Lead_mobile_kg": [
+      0.005,
+      0.02
+    ],
+    "year": [
+      10,
+      20,
+      30
+    ]
+  },
+  "epsilon_start": 1.0,
+  "epsilon_decay": 0.99,
+  "epsilon_minimum": 0.05,
+  "learning_rate": 0.2,
+  "discount_factor": 0.95
+}
